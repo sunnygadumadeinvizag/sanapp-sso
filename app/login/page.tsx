@@ -60,19 +60,14 @@ export default async function LoginPage({
       />
       <div className="iipe-login-page">
         <div className="iipe-login-stack">
-          {/* Hero: official IIPE logo + institute identity (from iipe.ac.in) */}
+          {/* Hero: official IIPE logo + institute identity (from iipe.ac.in).
+              The Hindi name, address and tagline live in the footer now. */}
           <div className="iipe-hero">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/img/iipe-logo.png" alt="IIPE logo" className="iipe-hero-logo" />
             <div className="iipe-hero-text">
               <div className="iipe-hero-title">INDIAN INSTITUTE OF PETROLEUM AND ENERGY</div>
               <div className="iipe-hero-native">భారతీయ పెట్రోలియం మరియు శక్తి విజ్ఞాన సంస్థ</div>
-              <div className="iipe-hero-native">भारतीय पेट्रोलियम और ऊर्जा संस्थान</div>
-              <div className="iipe-hero-address">
-                Vangali, Sabbavaram, Distt. Anakapalli, Andhra Pradesh - 531035
-              </div>
-              <div className="iipe-hero-address">
-                (An Institute of National Importance by an Act of Parliament)
-              </div>
             </div>
           </div>
 
@@ -154,7 +149,12 @@ export default async function LoginPage({
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer
+        links={[
+          { label: "Home", href: "/" },
+          { label: "Main Portal", href: MAIN_BASE_URL },
+        ]}
+      />
     </>
   );
 }

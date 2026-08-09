@@ -58,11 +58,6 @@ body {
   color: var(--iipe-primary);
   margin-top: 3px;
 }
-.iipe-hero-address {
-  font-size: 0.84rem;
-  color: var(--iipe-muted);
-  margin-top: 5px;
-}
 
 .iipe-login-grid {
   display: grid;
