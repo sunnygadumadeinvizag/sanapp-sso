@@ -16,7 +16,7 @@ export type UserClaims = {
   sub: string;
   username: string;
   name: string;
-  email: string;
+  email?: string | null;
 };
 
 // ------------------------------------------------------------------
@@ -27,9 +27,13 @@ export async function createSessionJwt(user: {
   id: string;
   username: string;
   name: string;
-  email: string;
+  email?: string | null;
 }): Promise<string> {
-  return new SignJWT({ username: user.username, name: user.name, email: user.email })
+  return new SignJWT({
+    username: user.username,
+    name: user.name,
+    email: user.email ?? "",
+  })
     .setProtectedHeader({ alg: "HS256" })
     .setSubject(user.id)
     .setIssuer("iipe-sso")
@@ -98,7 +102,11 @@ async function getPublicKey() {
 
 export async function signIdToken(user: UserClaims, audience: string): Promise<string> {
   const key = await getPrivateKey();
-  return new SignJWT({ username: user.username, name: user.name, email: user.email })
+  return new SignJWT({
+    username: user.username,
+    name: user.name,
+    email: user.email ?? "",
+  })
     .setProtectedHeader({ alg: "RS256", kid: KID })
     .setSubject(user.sub)
     .setIssuer(SSO_BASE_URL)

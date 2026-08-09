@@ -2,6 +2,21 @@ import "dotenv/config";
 import { hash } from "bcryptjs";
 import { generateKeyPair, exportJWK } from "jose";
 import { prisma } from "../src/lib/prisma";
+import { PrimaryRole, EmploymentType } from "../src/generated/prisma/enums";
+
+type SeedUser = {
+  username: string;
+  email: string;
+  name: string;
+  passwordHash: string;
+  role: string;
+  primaryRole: PrimaryRole;
+  employmentType?: EmploymentType | null;
+  designation?: string | null;
+  departmentId: string;
+  programmeId?: string | null;
+  courseId?: string | null;
+};
 
 async function main() {
   console.log("Seeding sso_db …");
@@ -9,13 +24,85 @@ async function main() {
   const passwordHash = await hash("password123", 10);
   const adminHash = await hash("admin123", 10);
 
-  const users = [
+  // ------------------------------------------------------------------
+  // Departments / sections
+  // ------------------------------------------------------------------
+  const departments = [
+    "Computer Science & Engineering",
+    "Petroleum Engineering",
+    "Chemical Engineering",
+    "Chemistry",
+    "Mechanical Engineering",
+    "Administration",
+    "Accounts & Finance",
+    "Human Resources",
+    "Library",
+    "Estate & Services",
+  ];
+
+  for (const name of departments) {
+    await prisma.department.upsert({
+      where: { name },
+      update: {},
+      create: { name },
+    });
+  }
+
+  // ------------------------------------------------------------------
+  // Programmes (students) and courses
+  // ------------------------------------------------------------------
+  const programmes = [
+    "B.Tech",
+    "M.Tech",
+    "MBA",
+    "M.Sc",
+    "Integrated M.Tech + PhD",
+    "PhD",
+  ];
+  for (const name of programmes) {
+    await prisma.programme.upsert({ where: { name }, update: {}, create: { name } });
+  }
+
+  const courses = [
+    "Petroleum Engineering",
+    "Chemical Engineering",
+    "Computer Science & Engineering",
+    "Chemistry",
+    "Mechanical Engineering",
+    "Management Studies",
+  ];
+  for (const name of courses) {
+    await prisma.course.upsert({ where: { name }, update: {}, create: { name } });
+  }
+
+  // ------------------------------------------------------------------
+  // Users — every user has a primary role + department profile
+  // ------------------------------------------------------------------
+  const dept = async (name: string) =>
+    (await prisma.department.findUnique({ where: { name } }))!;
+  const prog = async (name: string) =>
+    (await prisma.programme.findUnique({ where: { name } }))!;
+  const crs = async (name: string) =>
+    (await prisma.course.findUnique({ where: { name } }))!;
+
+  const cse = await dept("Computer Science & Engineering");
+  const petroleum = await dept("Petroleum Engineering");
+  const chemistry = await dept("Chemistry");
+  const administration = await dept("Administration");
+  const accounts = await dept("Accounts & Finance");
+
+  // Create/update all users first (so guide/HOD references can resolve).
+  const users: SeedUser[] = [
     {
       username: "sanyasi",
       email: "sanyasi.naidu@iipe.ac.in",
       name: "Sanyasi Naidu",
       passwordHash,
       role: "USER",
+      primaryRole: PrimaryRole.STAFF_TEACHING,
+      employmentType: EmploymentType.REGULAR,
+      designation: "Professor",
+      departmentId: cse.id,
     },
     {
       username: "lakshmi",
@@ -23,6 +110,10 @@ async function main() {
       name: "Lakshmi Devi",
       passwordHash,
       role: "USER",
+      primaryRole: PrimaryRole.STAFF_NON_TEACHING,
+      employmentType: EmploymentType.REGULAR,
+      designation: "Section Officer",
+      departmentId: administration.id,
     },
     {
       username: "admin",
@@ -30,6 +121,10 @@ async function main() {
       name: "System Administrator",
       passwordHash: adminHash,
       role: "SUPER_ADMIN",
+      primaryRole: PrimaryRole.STAFF_NON_TEACHING,
+      employmentType: EmploymentType.REGULAR,
+      designation: "Super Admin",
+      departmentId: administration.id,
     },
     {
       username: "ramesh",
@@ -37,6 +132,10 @@ async function main() {
       name: "Ramesh Kumar",
       passwordHash,
       role: "USER",
+      primaryRole: PrimaryRole.STUDENT,
+      departmentId: petroleum.id,
+      programmeId: (await prog("B.Tech")).id,
+      courseId: (await crs("Petroleum Engineering")).id,
     },
     {
       username: "geeta",
@@ -44,6 +143,9 @@ async function main() {
       name: "Geeta Sharma",
       passwordHash,
       role: "USER",
+      primaryRole: PrimaryRole.SCHOLAR,
+      departmentId: petroleum.id,
+      programmeId: (await prog("PhD")).id,
     },
     {
       username: "kiran",
@@ -51,6 +153,10 @@ async function main() {
       name: "Kiran Rao",
       passwordHash,
       role: "USER",
+      primaryRole: PrimaryRole.STAFF_TEACHING,
+      employmentType: EmploymentType.CONTRACTUAL,
+      designation: "Assistant Professor (Contract)",
+      departmentId: chemistry.id,
     },
     {
       username: "venkat",
@@ -58,6 +164,10 @@ async function main() {
       name: "Venkat Reddy",
       passwordHash,
       role: "USER",
+      primaryRole: PrimaryRole.STAFF_NON_TEACHING,
+      employmentType: EmploymentType.OUTSOURCING,
+      designation: "Accounts Assistant",
+      departmentId: accounts.id,
     },
   ];
 
@@ -69,6 +179,37 @@ async function main() {
     });
   }
 
+  // Assign guides (scholars) and Heads of Department.
+  const sanyasi = await prisma.user.findUnique({ where: { username: "sanyasi" } });
+  const geeta = await prisma.user.findUnique({ where: { username: "geeta" } });
+  const adminUser = await prisma.user.findUnique({ where: { username: "admin" } });
+  const lakshmi = await prisma.user.findUnique({ where: { username: "lakshmi" } });
+
+  if (sanyasi && geeta) {
+    await prisma.user.update({ where: { id: geeta.id }, data: { guideId: sanyasi.id } });
+  }
+  if (sanyasi) {
+    await prisma.department.update({
+      where: { id: cse.id },
+      data: { headId: sanyasi.id },
+    });
+  }
+  if (adminUser) {
+    await prisma.department.update({
+      where: { id: administration.id },
+      data: { headId: adminUser.id },
+    });
+  }
+  if (lakshmi) {
+    await prisma.department.update({
+      where: { id: petroleum.id },
+      data: { headId: lakshmi.id },
+    });
+  }
+
+  // ------------------------------------------------------------------
+  // OIDC clients
+  // ------------------------------------------------------------------
   const clients = [
     {
       clientId: "iipe-main",
@@ -120,6 +261,28 @@ async function main() {
     });
   }
 
+  // ------------------------------------------------------------------
+  // SMTP settings (stored in DB, not env) — dev Gmail credentials
+  // ------------------------------------------------------------------
+  await prisma.ssoSetting.upsert({
+    where: { id: "smtp" },
+    update: {
+      host: "smtp.gmail.com",
+      port: 587,
+      user: "psanengineer@gmail.com",
+      password: "yljqnrgulwltxcgg",
+      fromEmail: "psanengineer@gmail.com",
+    },
+    create: {
+      id: "smtp",
+      host: "smtp.gmail.com",
+      port: 587,
+      user: "psanengineer@gmail.com",
+      password: "yljqnrgulwltxcgg",
+      fromEmail: "psanengineer@gmail.com",
+    },
+  });
+
   // Ensure an RSA signing key exists for RS256 tokens / JWKS.
   const existingKey = await prisma.signingKey.findUnique({ where: { id: "active" } });
   if (!existingKey) {
@@ -135,7 +298,9 @@ async function main() {
     });
   }
 
-  console.log("sso_db seeded: 7 users, 4 OIDC clients (main, app1, app2, app3), signing key");
+  console.log(
+    "sso_db seeded: 7 users with primary-role profiles, 10 departments (3 with HODs), 6 programmes, 6 courses, 4 OIDC clients, SMTP settings, signing key"
+  );
 }
 
 main()

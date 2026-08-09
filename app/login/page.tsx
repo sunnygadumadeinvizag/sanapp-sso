@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "IIPE SSO — Sign in" };
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ returnTo?: string; error?: string; loggedOut?: string }>;
+  searchParams: Promise<{ returnTo?: string; error?: string; loggedOut?: string; reset?: string }>;
 }) {
   const params = await searchParams;
   const returnTo = params.returnTo ?? "/account";
@@ -35,6 +35,11 @@ export default async function LoginPage({
         )}
         {params.loggedOut && (
           <div className="iipe-alert success">You have been signed out.</div>
+        )}
+        {params.reset && (
+          <div className="iipe-alert success">
+            Your password was reset. Sign in with your new password.
+          </div>
         )}
 
         <form action="/api/login" method="post">
@@ -69,6 +74,10 @@ export default async function LoginPage({
             Sign in
           </button>
         </form>
+
+        <p style={{ marginTop: 12, marginBottom: 0, textAlign: "center" }}>
+          <a href="/forgot-password">Forgot password?</a>
+        </p>
 
         <p className="iipe-muted" style={{ marginTop: 16 }}>
           Demo accounts: <code>sanyasi</code> / <code>password123</code> ·{" "}

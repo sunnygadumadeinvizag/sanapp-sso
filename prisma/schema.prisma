@@ -12,17 +12,102 @@ datasource db {
 // Owns: user identity. Owns nothing about application roles.
 // ------------------------------------------------------------------
 
+// Every user must be identified with exactly one primary role.
+enum PrimaryRole {
+  STAFF_NON_TEACHING
+  STAFF_TEACHING
+  STUDENT
+  SCHOLAR
+  GUEST
+}
+
+// Employment type for staff (teaching and non-teaching).
+enum EmploymentType {
+  REGULAR
+  CONTRACTUAL
+  VISITING
+  OUTSOURCING
+  PROJECT_STAFF
+  OTHER
+}
+
+// Department / section. Each department may have a Head of Department.
+model Department {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  headId    String?
+  head      User?    @relation("HodOf", fields: [headId], references: [id])
+  users     User[]   @relation("UserDepartment")
+  createdAt DateTime @default(now())
+}
+
+// Degree programmes offered (used for Students).
+model Programme {
+  id       String @id @default(uuid())
+  name     String @unique
+  students User[]
+}
+
+// Courses offered (used for Students).
+model Course {
+  id       String @id @default(uuid())
+  name     String @unique
+  students User[]
+}
+
 model User {
-  id           String     @id @default(uuid())
-  username     String     @unique
-  email        String     @unique
-  name         String
-  passwordHash String
-  role         String     @default("USER") // SUPER_ADMIN | USER
-  isActive     Boolean    @default(true)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  authCodes    AuthCode[]
+  id             String           @id @default(uuid())
+  username       String           @unique
+  // NOTE: deliberately NOT unique — different user ids may share one email address.
+  email          String?
+  name           String
+  passwordHash   String
+  role           String           @default("USER") // SUPER_ADMIN | USER
+  primaryRole    PrimaryRole      @default(GUEST)
+  // Staff (teaching & non-teaching)
+  employmentType EmploymentType?
+  designation    String?
+  phone          String?
+  // Every user belongs to a department / section.
+  departmentId   String?
+  department     Department?      @relation("UserDepartment", fields: [departmentId], references: [id])
+  // Students: programme + course
+  programmeId    String?
+  programme      Programme?       @relation(fields: [programmeId], references: [id])
+  courseId       String?
+  course         Course?          @relation(fields: [courseId], references: [id])
+  // Scholars: guide (a staff member)
+  guideId        String?
+  guide          User?            @relation("GuideOf", fields: [guideId], references: [id])
+  scholars       User[]           @relation("GuideOf")
+  headsOf        Department[]     @relation("HodOf")
+  isActive       Boolean          @default(true)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  authCodes      AuthCode[]
+  resetTokens    PasswordResetToken[]
+}
+
+// One-time password (OTP) for forgot-password flows.
+model PasswordResetToken {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  otpHash   String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+}
+
+// SMTP settings for transactional email (OTP). Stored in the DB, not env.
+model SsoSetting {
+  id        String   @id @default("smtp")
+  host      String
+  port      Int
+  user      String
+  password  String
+  fromEmail String
+  updatedAt DateTime @updatedAt
 }
 
 // Registered OAuth 2.0 / OIDC clients (the independent applications)
