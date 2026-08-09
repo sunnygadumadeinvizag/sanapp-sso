@@ -116,6 +116,8 @@ export default function ResetPasswordPage() {
                 <label className="iipe-label" htmlFor="rp-password">
                   New password
                 </label>
+                {/* suppressHydrationWarning: browsers/password managers rewrite
+                    the autocomplete attribute before React hydrates. */}
                 <input
                   className="iipe-input"
                   id="rp-password"
@@ -123,6 +125,7 @@ export default function ResetPasswordPage() {
                   minLength={6}
                   required
                   autoComplete="new-password"
+                  suppressHydrationWarning
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -138,6 +141,7 @@ export default function ResetPasswordPage() {
                   minLength={6}
                   required
                   autoComplete="new-password"
+                  suppressHydrationWarning
                   value={confirm}
                   onChange={(e) => setConfirm(e.target.value)}
                 />

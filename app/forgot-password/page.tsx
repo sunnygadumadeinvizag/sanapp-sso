@@ -79,6 +79,8 @@ export default function ForgotPasswordPage() {
                 <label className="iipe-label" htmlFor="fp-username">
                   Username
                 </label>
+                {/* suppressHydrationWarning: browsers/password managers rewrite
+                    the autocomplete attribute before React hydrates. */}
                 <input
                   className="iipe-input"
                   id="fp-username"
@@ -86,6 +88,7 @@ export default function ForgotPasswordPage() {
                   autoComplete="username"
                   required
                   autoFocus
+                  suppressHydrationWarning
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />

@@ -18,7 +18,9 @@ const TRUNCATE_AT = 140;
 function formatDate(iso: string) {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString(undefined, {
+  // Fixed locale so the server-rendered HTML and the client render the
+  // exact same string (locale-undefined would differ between the two).
+  return d.toLocaleDateString("en-IN", {
     day: "numeric",
     month: "short",
     year: "numeric",

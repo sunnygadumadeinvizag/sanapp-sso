@@ -72,6 +72,8 @@ export default async function LoginPage({
                 <label className="iipe-label" htmlFor="username">
                   Username
                 </label>
+                {/* suppressHydrationWarning: browsers/password managers rewrite
+                    the autocomplete attribute before React hydrates. */}
                 <input
                   className="iipe-input"
                   id="username"
@@ -79,6 +81,7 @@ export default async function LoginPage({
                   autoComplete="username"
                   required
                   autoFocus
+                  suppressHydrationWarning
                 />
               </div>
               <div className="iipe-field">
@@ -92,6 +95,7 @@ export default async function LoginPage({
                   type="password"
                   autoComplete="current-password"
                   required
+                  suppressHydrationWarning
                 />
               </div>
               <button className="iipe-btn" type="submit" style={{ width: "100%" }}>
