@@ -5,7 +5,7 @@ import { verifySessionJwt } from "@/lib/crypto";
 export async function GET(request: NextRequest) {
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
 const proto = request.headers.get("x-forwarded-proto") ?? "http";
-const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host") ?? request.nextUrl.host;
+const host = request.headers.get("host") ?? request.nextUrl.host;
 const publicOrigin = `${proto}://${host}`;
   const url = request.nextUrl;
   const clientId = url.searchParams.get("client_id") ?? "";
