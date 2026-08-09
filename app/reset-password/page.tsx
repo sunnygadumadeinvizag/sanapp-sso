@@ -1,13 +1,21 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Footer, getPlatformNav, Header, Logo } from "iipe-common-ui";
 
 const SSO_BASE_URL = process.env.NEXT_PUBLIC_SSO_BASE_URL ?? "http://localhost:3000";
 const MAIN_BASE_URL = process.env.NEXT_PUBLIC_MAIN_BASE_URL ?? "http://localhost:3001";
 
 export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<div className="iipe-center-page"><div className="iipe-card">Loading…</div></div>}>
+      <ResetPasswordPageInner />
+    </Suspense>
+  );
+}
+
+function ResetPasswordPageInner() {
   const params = useSearchParams();
   const initialUsername = params.get("username") ?? "";
 
