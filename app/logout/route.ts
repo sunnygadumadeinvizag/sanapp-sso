@@ -8,6 +8,7 @@ import { prisma } from "@/lib/prisma";
  * registered OIDC client (no open redirects).
  */
 export async function GET(request: NextRequest) {
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
   const post = request.nextUrl.searchParams.get("post_logout_redirect_uri");
   let target: URL | null = null;
 
@@ -34,7 +35,7 @@ export async function GET(request: NextRequest) {
   }
 
   const res = NextResponse.redirect(
-    new URL(target ? target.toString() : "/login?loggedOut=1", request.url),
+    new URL(target ? target.toString() : BASE_PATH + "/login?loggedOut=1", request.url),
     303
   );
   res.cookies.set("sso_session", "", {

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { createSessionJwt } from "@/lib/crypto";
 
 export async function POST(request: NextRequest) {
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
   const form = await request.formData();
   const username = String(form.get("username") ?? "").trim();
   const password = String(form.get("password") ?? "");
@@ -15,7 +16,7 @@ export async function POST(request: NextRequest) {
 
   const fail = () =>
     NextResponse.redirect(
-      new URL(`/login?error=1&returnTo=${encodeURIComponent(safeReturn)}`, request.url),
+      new URL(BASE_PATH + `/login?error=1&returnTo=${encodeURIComponent(safeReturn)}`, request.url),
       303
     );
 
@@ -31,7 +32,7 @@ export async function POST(request: NextRequest) {
 
   // 303 See Other: after a successful form POST the browser must GET the target
   // (a 307 would re-send the POST to the authorize endpoint and fail).
-  const res = NextResponse.redirect(new URL(safeReturn, request.url), 303);
+  const res = NextResponse.redirect(new URL(BASE_PATH + safeReturn, request.url), 303);
   res.cookies.set("sso_session", token, {
     httpOnly: true,
     sameSite: "lax",

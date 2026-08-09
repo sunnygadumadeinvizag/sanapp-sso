@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { verifySessionJwt } from "@/lib/crypto";
 
 export async function GET(request: NextRequest) {
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
   const url = request.nextUrl;
   const clientId = url.searchParams.get("client_id") ?? "";
   const redirectUri = url.searchParams.get("redirect_uri") ?? "";
@@ -29,7 +30,7 @@ export async function GET(request: NextRequest) {
   const session = request.cookies.get("sso_session")?.value;
   const user = session ? await verifySessionJwt(session) : null;
   if (!user) {
-    const loginUrl = new URL("/login", request.nextUrl.origin);
+    const loginUrl = new URL(BASE_PATH + "/login", request.nextUrl.origin);
     loginUrl.searchParams.set("returnTo", url.pathname + url.search);
     return NextResponse.redirect(loginUrl);
   }
