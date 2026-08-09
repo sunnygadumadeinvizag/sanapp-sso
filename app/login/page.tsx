@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Footer, getPlatformNav, Header, Logo } from "iipe-common-ui";
+import { Footer, getPlatformNav, Header } from "iipe-common-ui";
 import { prisma } from "@/lib/prisma";
 import AnnouncementsPanel from "../components/AnnouncementsPanel";
 
@@ -43,84 +43,99 @@ export default async function LoginPage({
         })}
       />
       <div className="iipe-login-page">
-        <div className="iipe-login-grid">
-          {/* Left: sign-in form */}
-          <div className="iipe-card iipe-login-card">
-            <div style={{ marginBottom: 20 }}>
-              <Logo showText={false} />
-              <h1 style={{ margin: "14px 0 4px", fontSize: "1.3rem" }}>IIPE Central SSO</h1>
-              <p className="iipe-muted" style={{ margin: 0 }}>
+        <div className="iipe-login-stack">
+          {/* Hero: official IIPE logo + institute identity (from iipe.ac.in) */}
+          <div className="iipe-hero">
+            <img src="/img/iipe-logo.png" alt="IIPE logo" className="iipe-hero-logo" />
+            <div className="iipe-hero-text">
+              <div className="iipe-hero-title">INDIAN INSTITUTE OF PETROLEUM AND ENERGY</div>
+              <div className="iipe-hero-native">భారతీయ పెట్రోలియం మరియు శక్తి విజ్ఞాన సంస్థ</div>
+              <div className="iipe-hero-native">भारतीय पेट्रोलियम और ऊर्जा संस्थान</div>
+              <div className="iipe-hero-address">
+                Vangali, Sabbavaram, Distt. Anakapalli, Andhra Pradesh - 531035
+              </div>
+              <div className="iipe-hero-address">
+                (An Institute of National Importance by an Act of Parliament)
+              </div>
+            </div>
+          </div>
+
+          <div className="iipe-login-grid">
+            {/* Left: sign-in form */}
+            <div className="iipe-card iipe-login-card">
+              <h1 style={{ margin: "0 0 4px", fontSize: "1.3rem" }}>IIPE Central SSO</h1>
+              <p className="iipe-muted" style={{ margin: "0 0 18px" }}>
                 Sign in once to access all IIPE applications
+              </p>
+
+              {params.error && (
+                <div className="iipe-alert danger">Invalid username or password.</div>
+              )}
+              {params.loggedOut && (
+                <div className="iipe-alert success">You have been signed out.</div>
+              )}
+              {params.reset && (
+                <div className="iipe-alert success">
+                  Your password was reset. Sign in with your new password.
+                </div>
+              )}
+
+              <form action="/api/login" method="post">
+                <input type="hidden" name="returnTo" value={returnTo} />
+                <div className="iipe-field">
+                  <label className="iipe-label" htmlFor="username">
+                    Username
+                  </label>
+                  {/* suppressHydrationWarning: browsers/password managers rewrite
+                      the autocomplete attribute before React hydrates. */}
+                  <input
+                    className="iipe-input"
+                    id="username"
+                    name="username"
+                    autoComplete="username"
+                    required
+                    autoFocus
+                    suppressHydrationWarning
+                  />
+                </div>
+                <div className="iipe-field">
+                  <label className="iipe-label" htmlFor="password">
+                    Password
+                  </label>
+                  <input
+                    className="iipe-input"
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    suppressHydrationWarning
+                  />
+                </div>
+                <button className="iipe-btn" type="submit" style={{ width: "100%" }}>
+                  Sign in
+                </button>
+              </form>
+
+              <p style={{ marginTop: 12, marginBottom: 0, textAlign: "center" }}>
+                <a href="/forgot-password">Forgot password?</a>
+              </p>
+
+              <p className="iipe-muted" style={{ marginTop: 16, marginBottom: 0 }}>
+                Demo accounts: <code>sanyasi</code> / <code>password123</code> ·{" "}
+                <code>lakshmi</code> / <code>password123</code> · <code>admin</code> /{" "}
+                <code>admin123</code>
               </p>
             </div>
 
-            {params.error && (
-              <div className="iipe-alert danger">Invalid username or password.</div>
-            )}
-            {params.loggedOut && (
-              <div className="iipe-alert success">You have been signed out.</div>
-            )}
-            {params.reset && (
-              <div className="iipe-alert success">
-                Your password was reset. Sign in with your new password.
-              </div>
-            )}
-
-            <form action="/api/login" method="post">
-              <input type="hidden" name="returnTo" value={returnTo} />
-              <div className="iipe-field">
-                <label className="iipe-label" htmlFor="username">
-                  Username
-                </label>
-                {/* suppressHydrationWarning: browsers/password managers rewrite
-                    the autocomplete attribute before React hydrates. */}
-                <input
-                  className="iipe-input"
-                  id="username"
-                  name="username"
-                  autoComplete="username"
-                  required
-                  autoFocus
-                  suppressHydrationWarning
-                />
-              </div>
-              <div className="iipe-field">
-                <label className="iipe-label" htmlFor="password">
-                  Password
-                </label>
-                <input
-                  className="iipe-input"
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  suppressHydrationWarning
-                />
-              </div>
-              <button className="iipe-btn" type="submit" style={{ width: "100%" }}>
-                Sign in
-              </button>
-            </form>
-
-            <p style={{ marginTop: 12, marginBottom: 0, textAlign: "center" }}>
-              <a href="/forgot-password">Forgot password?</a>
-            </p>
-
-            <p className="iipe-muted" style={{ marginTop: 16, marginBottom: 0 }}>
-              Demo accounts: <code>sanyasi</code> / <code>password123</code> ·{" "}
-              <code>lakshmi</code> / <code>password123</code> · <code>admin</code> /{" "}
-              <code>admin123</code>
-            </p>
+            {/* Right: updates & alerts posted by the sysadmin */}
+            <AnnouncementsPanel
+              announcements={announcements.map((a) => ({
+                ...a,
+                createdAt: a.createdAt.toISOString(),
+              }))}
+            />
           </div>
-
-          {/* Right: updates & alerts posted by the sysadmin */}
-          <AnnouncementsPanel
-            announcements={announcements.map((a) => ({
-              ...a,
-              createdAt: a.createdAt.toISOString(),
-            }))}
-          />
         </div>
       </div>
       <Footer />
