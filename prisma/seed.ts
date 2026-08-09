@@ -298,8 +298,51 @@ async function main() {
     });
   }
 
+  // ------------------------------------------------------------------
+  // Platform updates & alerts shown on the SSO login page
+  // ------------------------------------------------------------------
+  const announcements: Array<{
+    type: "UPDATE" | "ALERT";
+    title: string;
+    body: string;
+  }> = [
+    {
+      type: "ALERT",
+      title: "Scheduled maintenance this Sunday",
+      body: "The intranet will be briefly unavailable on Sunday 23:00–00:30 IST for server maintenance. Save your work before then.",
+    },
+    {
+      type: "UPDATE",
+      title: "New PhD ERP module",
+      body: "Thesis submission and guide approval are now live in the PhD ERP. Scholars can upload drafts and track approvals from their dashboard.",
+    },
+    {
+      type: "UPDATE",
+      title: "Leave Management now online",
+      body: "Staff can apply for leave and track approvals. Accounts officers approve from the same dashboard.",
+    },
+    {
+      type: "ALERT",
+      title: "Change your password",
+      body: "For security, all users are encouraged to use the Forgot password flow and set a strong, unique password.",
+    },
+  ];
+  for (const a of announcements) {
+    await prisma.announcement.upsert({
+      where: { id: a.title },
+      update: { type: a.type, body: a.body, published: true },
+      create: {
+        id: a.title,
+        type: a.type,
+        title: a.title,
+        body: a.body,
+        published: true,
+      },
+    });
+  }
+
   console.log(
-    "sso_db seeded: 7 users with primary-role profiles, 10 departments (3 with HODs), 6 programmes, 6 courses, 4 OIDC clients, SMTP settings, signing key"
+    "sso_db seeded: 7 users with primary-role profiles, 10 departments (3 with HODs), 6 programmes, 6 courses, 4 OIDC clients, SMTP settings, announcements, signing key"
   );
 }
 

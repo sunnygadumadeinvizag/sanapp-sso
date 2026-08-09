@@ -6,3 +6,101 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+/* ------------------------------------------------------------------
+ * SSO login page — sign-in on the left, updates & alerts on the right.
+ * The two-panel grid fills wide screens (no more lost side space).
+ * ------------------------------------------------------------------ */
+.iipe-login-page {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+  background: linear-gradient(160deg, #f4f8fb 0%, #eaf1f7 60%, #e3edf5 100%);
+}
+
+.iipe-login-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 430px) minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.iipe-login-card {
+  width: 100%;
+}
+
+/* --- Updates & alerts panel --- */
+.iipe-login-updates {
+  min-width: 0;
+}
+
+.iipe-login-updates-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.iipe-login-updates-head h2 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.iipe-login-ann-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.iipe-login-ann {
+  background: #ffffff;
+  border: 1px solid var(--iipe-border, #dbe4ee);
+  border-left: 4px solid var(--iipe-primary, #1f6feb);
+  border-radius: var(--iipe-radius, 10px);
+  padding: 14px 16px;
+  box-shadow: 0 1px 4px rgba(16, 42, 84, 0.06);
+}
+
+.iipe-login-ann.alert {
+  border-left-color: var(--iipe-danger, #d1242f);
+  background: #fffafa;
+}
+
+.iipe-login-ann-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.iipe-login-ann h3 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+}
+
+.iipe-login-ann p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+/* --- Responsive: stack on narrow screens --- */
+@media (max-width: 900px) {
+  .iipe-login-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .iipe-login-ann-list {
+    max-height: none;
+  }
+}

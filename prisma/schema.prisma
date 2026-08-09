@@ -110,6 +110,22 @@ model SsoSetting {
   updatedAt DateTime @updatedAt
 }
 
+// Platform updates & alerts posted by the Super Admin, shown on the SSO login page.
+enum AnnouncementType {
+  UPDATE
+  ALERT
+}
+
+model Announcement {
+  id        String           @id @default(uuid())
+  type      AnnouncementType @default(UPDATE)
+  title     String
+  body      String
+  published Boolean          @default(true)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
 // Registered OAuth 2.0 / OIDC clients (the independent applications)
 model OidcClient {
   id           String     @id @default(uuid())
