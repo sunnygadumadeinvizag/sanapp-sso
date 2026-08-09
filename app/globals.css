@@ -60,18 +60,29 @@ body {
   padding-right: 4px;
 }
 
+/* Card base look (shared with the modal cards). */
 .iipe-login-ann {
   background: #ffffff;
   border: 1px solid var(--iipe-border, #dbe4ee);
   border-left: 4px solid var(--iipe-primary, #1f6feb);
   border-radius: var(--iipe-radius, 10px);
-  padding: 14px 16px;
+  padding: 12px 16px;
   box-shadow: 0 1px 4px rgba(16, 42, 84, 0.06);
 }
 
 .iipe-login-ann.alert {
   border-left-color: var(--iipe-danger, #d1242f);
   background: #fffafa;
+}
+
+/* Cards in the side panel have ONE uniform height: a fixed header, a
+   single-line title and a 3-line body, so every card is identical no
+   matter how long the text is. Longer bodies are clamped and get a
+   "View more" link that opens the complete update in a modal. */
+.iipe-login-ann-list .iipe-login-ann {
+  display: flex;
+  flex-direction: column;
+  height: 158px;
 }
 
 .iipe-login-ann-head {
@@ -82,16 +93,123 @@ body {
   margin-bottom: 6px;
 }
 
-.iipe-login-ann h3 {
+.iipe-login-ann-title {
   margin: 0 0 4px;
   font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.iipe-login-ann p {
+.iipe-login-ann-body {
+  flex: 1;
   margin: 0;
   font-size: 0.9rem;
   color: #475569;
   line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.iipe-login-ann-foot {
+  height: 22px;
+  display: flex;
+  align-items: flex-end;
+  margin-top: 4px;
+}
+
+.iipe-login-ann-more {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--iipe-primary, #1f6feb);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* "View all updates" footer button */
+.iipe-login-updates-foot {
+  margin-top: 14px;
+  text-align: center;
+}
+
+.iipe-login-viewall {
+  background: #ffffff;
+  border: 1px solid var(--iipe-border, #dbe4ee);
+  color: var(--iipe-primary, #1f6feb);
+  border-radius: 999px;
+  padding: 7px 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.iipe-login-viewall:hover {
+  border-color: var(--iipe-primary, #1f6feb);
+}
+
+/* Modal with the complete update(s) — full text, no clamping. */
+.iipe-ann-modal {
+  max-width: 560px;
+}
+
+.iipe-ann-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.iipe-ann-modal-head h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.iipe-ann-modal-close {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  line-height: 1;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.iipe-ann-modal-close:hover {
+  color: #0f172a;
+}
+
+.iipe-ann-modal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.iipe-ann-modal-list .iipe-login-ann {
+  display: block;
+  height: auto;
+  padding: 14px 16px;
+}
+
+.iipe-ann-modal-title {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.iipe-ann-modal-full {
+  margin: 0;
+  font-size: 0.92rem;
+  color: #334155;
+  line-height: 1.6;
+  white-space: pre-wrap;
 }
 
 /* --- Responsive: stack on narrow screens --- */

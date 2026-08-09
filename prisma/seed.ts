@@ -322,6 +322,16 @@ async function main() {
       body: "Staff can apply for leave and track approvals. Accounts officers approve from the same dashboard.",
     },
     {
+      type: "UPDATE",
+      title: "New leave policy for contractual staff",
+      body: "From this month, contractual and outsourced staff can apply for casual leave through Leave Management. The policy change follows the 12th staff council meeting: casual leave is now 12 days per calendar year, and staff must attach supporting documents for leave beyond 3 consecutive days. Please contact the HR section or your department head for clarifications on eligibility before applying.",
+    },
+    {
+      type: "ALERT",
+      title: "Phishing emails targeting staff",
+      body: "We have received reports of phishing emails asking staff to share passwords or OTPs. The intranet team will never ask for your password or OTP by email or phone. If you receive such an email, do not click any links and report it to support@iipe.ac.in immediately. Change your password using the Forgot password flow if you already responded to a suspicious message.",
+    },
+    {
       type: "ALERT",
       title: "Change your password",
       body: "For security, all users are encouraged to use the Forgot password flow and set a strong, unique password.",
@@ -342,7 +352,7 @@ async function main() {
   }
 
   console.log(
-    "sso_db seeded: 7 users with primary-role profiles, 10 departments (3 with HODs), 6 programmes, 6 courses, 4 OIDC clients, SMTP settings, announcements, signing key"
+    "sso_db seeded: 7 users with primary-role profiles, 10 departments (3 with HODs), 6 programmes, 6 courses, 4 OIDC clients, SMTP settings, 6 announcements, signing key"
   );
 }
 

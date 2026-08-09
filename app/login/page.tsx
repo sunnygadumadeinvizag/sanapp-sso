@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Footer, getPlatformNav, Header, Logo } from "iipe-common-ui";
 import { prisma } from "@/lib/prisma";
+import AnnouncementsPanel from "../components/AnnouncementsPanel";
 
 export const metadata: Metadata = { title: "IIPE SSO — Sign in" };
 export const dynamic = "force-dynamic";
@@ -15,14 +16,6 @@ type Announcement = {
   body: string;
   createdAt: Date;
 };
-
-function formatDate(d: Date) {
-  return d.toLocaleDateString(undefined, {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-}
 
 export default async function LoginPage({
   searchParams,
@@ -118,40 +111,12 @@ export default async function LoginPage({
           </div>
 
           {/* Right: updates & alerts posted by the sysadmin */}
-          <aside className="iipe-login-updates">
-            <div className="iipe-login-updates-head">
-              <h2>Updates &amp; Alerts</h2>
-              {announcements.length > 0 && (
-                <span className="iipe-muted">{announcements.length} latest</span>
-              )}
-            </div>
-
-            {announcements.length === 0 ? (
-              <p className="iipe-muted" style={{ marginTop: 8 }}>
-                No announcements right now.
-              </p>
-            ) : (
-              <div className="iipe-login-ann-list">
-                {announcements.map((a) => (
-                  <article
-                    key={a.id}
-                    className={`iipe-login-ann ${a.type === "ALERT" ? "alert" : "update"}`}
-                  >
-                    <div className="iipe-login-ann-head">
-                      <span className={`iipe-badge ${a.type === "ALERT" ? "danger" : ""}`}>
-                        {a.type === "ALERT" ? "ALERT" : "UPDATE"}
-                      </span>
-                      <time className="iipe-muted" dateTime={a.createdAt.toISOString()}>
-                        {formatDate(a.createdAt)}
-                      </time>
-                    </div>
-                    <h3>{a.title}</h3>
-                    <p>{a.body}</p>
-                  </article>
-                ))}
-              </div>
-            )}
-          </aside>
+          <AnnouncementsPanel
+            announcements={announcements.map((a) => ({
+              ...a,
+              createdAt: a.createdAt.toISOString(),
+            }))}
+          />
         </div>
       </div>
       <Footer />
