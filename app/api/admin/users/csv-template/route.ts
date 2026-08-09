@@ -16,6 +16,12 @@ const HEADER = [
   "programme",
   "course",
   "guide_username",
+  "gender",
+  "ph_category",
+  "roll_no",
+  "emp_no",
+  "non_institute_email",
+  "emergency_phone",
 ];
 
 function authorized(request: NextRequest) {
@@ -47,6 +53,12 @@ export async function GET(request: NextRequest) {
       "",
       "",
       "",
+      "MALE",
+      "NONE",
+      "",
+      "IPE-T-101",
+      "arjun.personal@gmail.com",
+      "9123456780",
     ],
     [
       "Priya Singh",
@@ -61,6 +73,12 @@ export async function GET(request: NextRequest) {
       "B.Tech",
       "Petroleum Engineering",
       "",
+      "FEMALE",
+      "NONE",
+      "21PE3021",
+      "",
+      "",
+      "9988776655",
     ],
     [
       "Anita Desai",
@@ -75,6 +93,12 @@ export async function GET(request: NextRequest) {
       "PhD",
       "",
       "sanyasi",
+      "FEMALE",
+      "OH",
+      "23PH1108",
+      "",
+      "",
+      "",
     ],
   ]);
 

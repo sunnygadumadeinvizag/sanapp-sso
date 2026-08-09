@@ -31,6 +31,13 @@ enum EmploymentType {
   OTHER
 }
 
+// Gender — required for every user.
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
 // Department / section. Each department may have a Head of Department.
 model Department {
   id        String   @id @default(uuid())
@@ -81,6 +88,14 @@ model User {
   guide          User?            @relation("GuideOf", fields: [guideId], references: [id])
   scholars       User[]           @relation("GuideOf")
   headsOf        Department[]     @relation("HodOf")
+  // Identity/demographic profile — captured for every user.
+  // Roll number: students & scholars. Employee number: staff (teaching & non-teaching).
+  rollNo            String?
+  empNo             String?
+  gender            Gender?        // required (validation-enforced)
+  phCategory        String?        // required (NONE when not applicable)
+  nonInstituteEmail String?        // optional personal email
+  emergencyPhone    String?        // optional emergency contact
   isActive       Boolean          @default(true)
   // Avatar image path (e.g. /uploads/avatars/{id}.png) or null.
   avatar         String?

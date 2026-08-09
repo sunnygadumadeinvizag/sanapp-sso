@@ -19,6 +19,8 @@ const EMPLOYMENT_TYPES = [
   "OTHER",
 ] as const;
 
+const GENDERS = ["MALE", "FEMALE", "OTHER"] as const;
+
 const USER_SELECT = {
   id: true,
   username: true,
@@ -29,6 +31,12 @@ const USER_SELECT = {
   employmentType: true,
   designation: true,
   phone: true,
+  rollNo: true,
+  empNo: true,
+  gender: true,
+  phCategory: true,
+  nonInstituteEmail: true,
+  emergencyPhone: true,
   departmentId: true,
   department: { select: { id: true, name: true } },
   programmeId: true,
@@ -95,6 +103,29 @@ function normalize(body: Record<string, unknown>) {
   const designation =
     typeof body.designation === "string" ? body.designation.trim() || null : undefined;
   const phone = typeof body.phone === "string" ? body.phone.trim() || null : undefined;
+  const emergencyPhone =
+    typeof body.emergencyPhone === "string"
+      ? body.emergencyPhone.trim() || null
+      : undefined;
+  const rollNo =
+    typeof body.rollNo === "string" ? body.rollNo.trim() || null : undefined;
+  const empNo =
+    typeof body.empNo === "string" ? body.empNo.trim() || null : undefined;
+  const gender =
+    body.gender === null || body.gender === ""
+      ? null
+      : typeof body.gender === "string" &&
+          (GENDERS as readonly string[]).includes(body.gender.toUpperCase())
+        ? (body.gender.toUpperCase() as (typeof GENDERS)[number])
+        : undefined;
+  const phCategory =
+    typeof body.phCategory === "string"
+      ? body.phCategory.trim().toUpperCase() || null
+      : undefined;
+  const nonInstituteEmail =
+    typeof body.nonInstituteEmail === "string"
+      ? body.nonInstituteEmail.trim().toLowerCase() || null
+      : undefined;
   const refId = (v: unknown): string | null | undefined =>
     v === null || v === ""
       ? null // explicitly cleared
@@ -118,6 +149,12 @@ function normalize(body: Record<string, unknown>) {
     employmentType,
     designation,
     phone,
+    emergencyPhone,
+    rollNo,
+    empNo,
+    gender,
+    phCategory,
+    nonInstituteEmail,
     departmentId,
     programmeId,
     courseId,
@@ -133,17 +170,35 @@ function validateProfile(b: ReturnType<typeof normalize>) {
   if (!b.departmentId) {
     return "departmentId is required — every user belongs to a department / section";
   }
+  if (!b.gender) {
+    return "gender is required — select Male, Female or Other";
+  }
+  if (!b.phCategory) {
+    return "phCategory is required — select a category (NONE when not applicable)";
+  }
   if (
     (b.primaryRole === "STAFF_TEACHING" || b.primaryRole === "STAFF_NON_TEACHING") &&
     !b.employmentType
   ) {
     return "employmentType is required for staff (teaching and non-teaching)";
   }
+  if (
+    (b.primaryRole === "STAFF_TEACHING" || b.primaryRole === "STAFF_NON_TEACHING") &&
+    !b.empNo
+  ) {
+    return "empNo (employee number) is required for staff (teaching and non-teaching)";
+  }
   if (b.primaryRole === "STUDENT" && (!b.programmeId || !b.courseId)) {
     return "programmeId and courseId are required for students";
   }
+  if ((b.primaryRole === "STUDENT" || b.primaryRole === "SCHOLAR") && !b.rollNo) {
+    return "rollNo (roll number) is required for students and scholars";
+  }
   if (b.primaryRole === "SCHOLAR" && !b.guideId) {
     return "guideId is required for scholars";
+  }
+  if (b.nonInstituteEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.nonInstituteEmail)) {
+    return "nonInstituteEmail is not a valid email address";
   }
   return null;
 }
@@ -223,6 +278,12 @@ export async function POST(request: NextRequest) {
       employmentType: body.employmentType,
       designation: body.designation,
       phone: body.phone,
+      emergencyPhone: body.emergencyPhone,
+      rollNo: body.rollNo,
+      empNo: body.empNo,
+      gender: body.gender,
+      phCategory: body.phCategory,
+      nonInstituteEmail: body.nonInstituteEmail,
       departmentId: body.departmentId,
       programmeId: body.programmeId,
       courseId: body.courseId,
@@ -252,7 +313,14 @@ export async function PATCH(request: NextRequest) {
 
   // Validate the profile whenever the caller touches any part of it, using the
   // effective (merged) profile so untouched fields fall back to existing values.
-  if (body.primaryRole !== undefined || body.departmentId !== undefined) {
+  if (
+    body.primaryRole !== undefined ||
+    body.departmentId !== undefined ||
+    body.gender !== undefined ||
+    body.phCategory !== undefined ||
+    body.rollNo !== undefined ||
+    body.empNo !== undefined
+  ) {
     const effective: ReturnType<typeof normalize> = {
       ...body,
       primaryRole: body.primaryRole ?? existing.primaryRole,
@@ -267,6 +335,15 @@ export async function PATCH(request: NextRequest) {
       courseId:
         body.courseId !== undefined ? body.courseId : existing.courseId,
       guideId: body.guideId !== undefined ? body.guideId : existing.guideId,
+      gender: body.gender !== undefined ? body.gender : existing.gender,
+      phCategory:
+        body.phCategory !== undefined ? body.phCategory : existing.phCategory,
+      rollNo: body.rollNo !== undefined ? body.rollNo : existing.rollNo,
+      empNo: body.empNo !== undefined ? body.empNo : existing.empNo,
+      nonInstituteEmail:
+        body.nonInstituteEmail !== undefined
+          ? body.nonInstituteEmail
+          : existing.nonInstituteEmail,
     };
     const profileError = validateProfile(effective);
     if (profileError) {
@@ -306,6 +383,16 @@ export async function PATCH(request: NextRequest) {
         : {}),
       ...(body.designation !== undefined ? { designation: body.designation } : {}),
       ...(body.phone !== undefined ? { phone: body.phone } : {}),
+      ...(body.emergencyPhone !== undefined
+        ? { emergencyPhone: body.emergencyPhone }
+        : {}),
+      ...(body.rollNo !== undefined ? { rollNo: body.rollNo } : {}),
+      ...(body.empNo !== undefined ? { empNo: body.empNo } : {}),
+      ...(body.gender !== undefined ? { gender: body.gender } : {}),
+      ...(body.phCategory !== undefined ? { phCategory: body.phCategory } : {}),
+      ...(body.nonInstituteEmail !== undefined
+        ? { nonInstituteEmail: body.nonInstituteEmail }
+        : {}),
       ...(body.departmentId !== undefined ? { departmentId: body.departmentId } : {}),
       ...(body.programmeId !== undefined ? { programmeId: body.programmeId } : {}),
       ...(body.courseId !== undefined ? { courseId: body.courseId } : {}),

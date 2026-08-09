@@ -9,6 +9,8 @@ export type ProfileUser = {
   email: string | null;
   phone: string | null;
   designation: string | null;
+  nonInstituteEmail: string | null;
+  emergencyPhone: string | null;
   primaryRole: string;
   avatar: string | null;
   profileLocked: boolean;
@@ -27,6 +29,10 @@ export function ProfileEditor({
   const [email, setEmail] = useState(user.email ?? "");
   const [phone, setPhone] = useState(user.phone ?? "");
   const [designation, setDesignation] = useState(user.designation ?? "");
+  const [nonInstituteEmail, setNonInstituteEmail] = useState(
+    user.nonInstituteEmail ?? ""
+  );
+  const [emergencyPhone, setEmergencyPhone] = useState(user.emergencyPhone ?? "");
   const [avatar, setAvatar] = useState<string | null>(user.avatar);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -102,6 +108,8 @@ export function ProfileEditor({
           email: email.trim(),
           phone: phone.trim(),
           designation: designation.trim(),
+          nonInstituteEmail: nonInstituteEmail.trim(),
+          emergencyPhone: emergencyPhone.trim(),
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -257,6 +265,35 @@ export function ProfileEditor({
             />
           </div>
         </div>
+        <div className="iipe-row" style={{ gap: 12 }}>
+          <div className="iipe-field" style={{ flex: 1 }}>
+            <label className="iipe-label" htmlFor="pe-noninst">
+              Non-institute email
+            </label>
+            <input
+              id="pe-noninst"
+              className="iipe-input"
+              type="email"
+              value={nonInstituteEmail}
+              disabled={locked || busy}
+              onChange={(e) => setNonInstituteEmail(e.target.value)}
+              placeholder="personal / alternate email (optional)"
+            />
+          </div>
+          <div className="iipe-field" style={{ flex: 1 }}>
+            <label className="iipe-label" htmlFor="pe-emergency">
+              Emergency phone
+            </label>
+            <input
+              id="pe-emergency"
+              className="iipe-input"
+              value={emergencyPhone}
+              disabled={locked || busy}
+              onChange={(e) => setEmergencyPhone(e.target.value)}
+              placeholder="emergency contact number (optional)"
+            />
+          </div>
+        </div>
         <div className="iipe-field">
           <label className="iipe-label" htmlFor="pe-designation">
             Designation
@@ -274,7 +311,8 @@ export function ProfileEditor({
             {busy ? "Saving…" : "Save profile"}
           </button>
           <span className="iipe-muted" style={{ alignSelf: "center" }}>
-            Username, primary role and department are managed by the Super Admin.
+            Username, roll/employee number, gender and department are managed by
+            the Super Admin.
           </span>
         </div>
       </form>

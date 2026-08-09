@@ -2,7 +2,7 @@ import "dotenv/config";
 import { hash } from "bcryptjs";
 import { generateKeyPair, exportJWK } from "jose";
 import { prisma } from "../src/lib/prisma";
-import { PrimaryRole, EmploymentType } from "../src/generated/prisma/enums";
+import { PrimaryRole, EmploymentType, Gender } from "../src/generated/prisma/enums";
 
 type SeedUser = {
   username: string;
@@ -14,6 +14,10 @@ type SeedUser = {
   employmentType?: EmploymentType | null;
   designation?: string | null;
   departmentId: string;
+  gender: Gender;
+  phCategory: string;
+  rollNo?: string | null;
+  empNo?: string | null;
   programmeId?: string | null;
   courseId?: string | null;
 };
@@ -99,6 +103,9 @@ async function main() {
       name: "Sanyasi Naidu",
       passwordHash,
       role: "USER",
+      gender: Gender.MALE,
+      phCategory: "NONE",
+      empNo: "IPE-T-001",
       primaryRole: PrimaryRole.STAFF_TEACHING,
       employmentType: EmploymentType.REGULAR,
       designation: "Professor",
@@ -110,6 +117,9 @@ async function main() {
       name: "Lakshmi Devi",
       passwordHash,
       role: "USER",
+      gender: Gender.FEMALE,
+      phCategory: "NONE",
+      empNo: "IPE-NT-014",
       primaryRole: PrimaryRole.STAFF_NON_TEACHING,
       employmentType: EmploymentType.REGULAR,
       designation: "Section Officer",
@@ -121,6 +131,9 @@ async function main() {
       name: "System Administrator",
       passwordHash: adminHash,
       role: "SUPER_ADMIN",
+      gender: Gender.MALE,
+      phCategory: "NONE",
+      empNo: "IPE-NT-001",
       primaryRole: PrimaryRole.STAFF_NON_TEACHING,
       employmentType: EmploymentType.REGULAR,
       designation: "Super Admin",
@@ -132,6 +145,9 @@ async function main() {
       name: "Ramesh Kumar",
       passwordHash,
       role: "USER",
+      gender: Gender.MALE,
+      phCategory: "NONE",
+      rollNo: "21PE3012",
       primaryRole: PrimaryRole.STUDENT,
       departmentId: petroleum.id,
       programmeId: (await prog("B.Tech")).id,
@@ -143,6 +159,9 @@ async function main() {
       name: "Geeta Sharma",
       passwordHash,
       role: "USER",
+      gender: Gender.FEMALE,
+      phCategory: "NONE",
+      rollNo: "23PH1105",
       primaryRole: PrimaryRole.SCHOLAR,
       departmentId: petroleum.id,
       programmeId: (await prog("PhD")).id,
@@ -153,6 +172,9 @@ async function main() {
       name: "Kiran Rao",
       passwordHash,
       role: "USER",
+      gender: Gender.MALE,
+      phCategory: "NONE",
+      empNo: "IPE-T-042",
       primaryRole: PrimaryRole.STAFF_TEACHING,
       employmentType: EmploymentType.CONTRACTUAL,
       designation: "Assistant Professor (Contract)",
@@ -164,6 +186,9 @@ async function main() {
       name: "Venkat Reddy",
       passwordHash,
       role: "USER",
+      gender: Gender.MALE,
+      phCategory: "NONE",
+      empNo: "IPE-NT-077",
       primaryRole: PrimaryRole.STAFF_NON_TEACHING,
       employmentType: EmploymentType.OUTSOURCING,
       designation: "Accounts Assistant",

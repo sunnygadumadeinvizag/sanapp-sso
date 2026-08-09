@@ -27,6 +27,22 @@ const EMPLOYMENT_LABELS: Record<string, string> = {
   OTHER: "Other",
 };
 
+const GENDER_LABELS: Record<string, string> = {
+  MALE: "Male",
+  FEMALE: "Female",
+  OTHER: "Other",
+};
+
+const PH_LABELS: Record<string, string> = {
+  NONE: "None",
+  OH: "Orthopaedically Handicapped",
+  VI: "Visually Impaired",
+  HI: "Hearing Impaired",
+  LD: "Learning Disability",
+  MD: "Multiple Disabilities",
+  OTHER: "Other",
+};
+
 export default async function AccountPage() {
   const store = await cookies();
   const session = store.get("sso_session")?.value ?? "";
@@ -64,10 +80,16 @@ export default async function AccountPage() {
     email: user.email,
     phone: user.phone,
     designation: user.designation,
+    nonInstituteEmail: user.nonInstituteEmail,
+    emergencyPhone: user.emergencyPhone,
     primaryRole: user.primaryRole,
     avatar: user.avatar,
     profileLocked: user.profileLocked,
   };
+
+  const isStaff =
+    user.primaryRole === "STAFF_TEACHING" ||
+    user.primaryRole === "STAFF_NON_TEACHING";
 
   return (
     <PageShell
@@ -165,9 +187,19 @@ export default async function AccountPage() {
                 <td className="iipe-muted">Department / Section</td>
                 <td>{user.department?.name ?? "—"}</td>
               </tr>
-              {user.primaryRole === "STAFF_TEACHING" ||
-              user.primaryRole === "STAFF_NON_TEACHING" ? (
+              {(user.primaryRole === "STUDENT" ||
+                user.primaryRole === "SCHOLAR") && (
+                <tr>
+                  <td className="iipe-muted">Roll number</td>
+                  <td>{user.rollNo ?? "—"}</td>
+                </tr>
+              )}
+              {isStaff && (
                 <>
+                  <tr>
+                    <td className="iipe-muted">Employee number</td>
+                    <td>{user.empNo ?? "—"}</td>
+                  </tr>
                   <tr>
                     <td className="iipe-muted">Employment type</td>
                     <td>
@@ -183,7 +215,7 @@ export default async function AccountPage() {
                     </tr>
                   )}
                 </>
-              ) : null}
+              )}
               {user.primaryRole === "STUDENT" ? (
                 <>
                   <tr>
@@ -211,12 +243,26 @@ export default async function AccountPage() {
                   </td>
                 </tr>
               ) : null}
-              {user.phone && (
-                <tr>
-                  <td className="iipe-muted">Phone</td>
-                  <td>{user.phone}</td>
-                </tr>
-              )}
+              <tr>
+                <td className="iipe-muted">Gender</td>
+                <td>{GENDER_LABELS[user.gender ?? ""] ?? user.gender ?? "—"}</td>
+              </tr>
+              <tr>
+                <td className="iipe-muted">PH category</td>
+                <td>{PH_LABELS[user.phCategory ?? ""] ?? user.phCategory ?? "—"}</td>
+              </tr>
+              <tr>
+                <td className="iipe-muted">Phone</td>
+                <td>{user.phone ?? "—"}</td>
+              </tr>
+              <tr>
+                <td className="iipe-muted">Emergency phone</td>
+                <td>{user.emergencyPhone ?? "—"}</td>
+              </tr>
+              <tr>
+                <td className="iipe-muted">Non-institute email</td>
+                <td>{user.nonInstituteEmail ?? "—"}</td>
+              </tr>
               {user.headsOf.length > 0 ? (
                 <tr>
                   <td className="iipe-muted">Head of</td>

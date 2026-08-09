@@ -22,6 +22,30 @@ const EMPLOYMENT_TYPES = [
   "OTHER",
 ];
 
+const GENDERS = ["MALE", "FEMALE", "OTHER"];
+
+// Column order when the CSV has no header row (must match the template).
+const COLUMNS = [
+  "name",
+  "username",
+  "email",
+  "password",
+  "primary_role",
+  "department",
+  "employment_type",
+  "designation",
+  "phone",
+  "programme",
+  "course",
+  "guide_username",
+  "gender",
+  "ph_category",
+  "roll_no",
+  "emp_no",
+  "non_institute_email",
+  "emergency_phone",
+] as const;
+
 function authorized(request: NextRequest) {
   const key =
     request.nextUrl.searchParams.get("key") ??
@@ -31,7 +55,6 @@ function authorized(request: NextRequest) {
 }
 
 const norm = (v: string) => v.trim().toUpperCase().replace(/[\s-]+/g, "_");
-const cell = (row: string[], i: number) => (row[i] ?? "").trim();
 
 type RowError = { row: number; username: string; error: string };
 
@@ -61,11 +84,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "The CSV file is empty" }, { status: 400 });
   }
 
-  // Skip the template header row when present (name + username as first cells).
-  const first = rows[0].map((c) => c.trim().toLowerCase());
+  // When the first row is a header, map columns by name so users can reorder
+  // or omit optional columns; otherwise fall back to the template order.
+  const header = rows[0].map((c) => c.trim().toLowerCase());
   let start = 0;
-  if (first.includes("name") && first.includes("username")) {
+  let colIndex: (name: string) => number;
+  if (header.includes("name") && header.includes("username")) {
     start = 1;
+    colIndex = (name: string) => header.indexOf(name);
+  } else {
+    colIndex = (name: string) => COLUMNS.indexOf(name as (typeof COLUMNS)[number]);
   }
   const dataRows = rows.slice(start);
   if (dataRows.length === 0) {
@@ -99,21 +127,31 @@ export async function POST(request: NextRequest) {
   for (let i = 0; i < dataRows.length; i++) {
     const row = dataRows[i];
     const csvRow = start + i + 1; // 1-based line in the file
-    const username = cell(row, 1).toLowerCase();
+    const cell = (name: string) => {
+      const idx = colIndex(name);
+      return idx >= 0 ? (row[idx] ?? "").trim() : "";
+    };
+    const username = cell("username").toLowerCase();
 
     const fail = (error: string) => errors.push({ row: csvRow, username, error });
 
-    const name = cell(row, 0);
-    const email = cell(row, 2).toLowerCase();
-    const password = cell(row, 3);
-    const primaryRole = norm(cell(row, 4));
-    const departmentName = cell(row, 5);
-    const employmentType = norm(cell(row, 6));
-    const designation = cell(row, 7) || null;
-    const phone = cell(row, 8) || null;
-    const programmeName = cell(row, 9);
-    const courseName = cell(row, 10);
-    const guideUsername = cell(row, 11).toLowerCase();
+    const name = cell("name");
+    const email = cell("email").toLowerCase();
+    const password = cell("password");
+    const primaryRole = norm(cell("primary_role"));
+    const departmentName = cell("department");
+    const employmentType = norm(cell("employment_type"));
+    const designation = cell("designation") || null;
+    const phone = cell("phone") || null;
+    const programmeName = cell("programme");
+    const courseName = cell("course");
+    const guideUsername = cell("guide_username").toLowerCase();
+    const gender = norm(cell("gender"));
+    const phCategory = norm(cell("ph_category"));
+    const rollNo = cell("roll_no") || null;
+    const empNo = cell("emp_no") || null;
+    const nonInstituteEmail = cell("non_institute_email").toLowerCase();
+    const emergencyPhone = cell("emergency_phone") || null;
 
     if (!name) {
       fail("name is required");
@@ -135,10 +173,22 @@ export async function POST(request: NextRequest) {
       fail("email is not a valid address (or leave it blank)");
       continue;
     }
+    if (nonInstituteEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(nonInstituteEmail)) {
+      fail("non_institute_email is not a valid address (or leave it blank)");
+      continue;
+    }
     if (!PRIMARY_ROLES.includes(primaryRole)) {
       fail(
-        `primary_role must be one of ${PRIMARY_ROLES.join(" | ")} (got "${cell(row, 4)}")`
+        `primary_role must be one of ${PRIMARY_ROLES.join(" | ")} (got "${cell("primary_role")}")`
       );
+      continue;
+    }
+    if (!GENDERS.includes(gender)) {
+      fail(`gender is required — one of ${GENDERS.join(" | ")} (got "${cell("gender")}")`);
+      continue;
+    }
+    if (!phCategory) {
+      fail("ph_category is required — use NONE when not applicable");
       continue;
     }
     const departmentId = deptByName.get(departmentName.toLowerCase());
@@ -146,13 +196,16 @@ export async function POST(request: NextRequest) {
       fail(`department "${departmentName}" was not found — add it in Departments first`);
       continue;
     }
-    if (
-      (primaryRole === "STAFF_TEACHING" || primaryRole === "STAFF_NON_TEACHING") &&
-      !EMPLOYMENT_TYPES.includes(employmentType)
-    ) {
+    const isStaff =
+      primaryRole === "STAFF_TEACHING" || primaryRole === "STAFF_NON_TEACHING";
+    if (isStaff && !EMPLOYMENT_TYPES.includes(employmentType)) {
       fail(
         `employment_type is required for staff — one of ${EMPLOYMENT_TYPES.join(" | ")}`
       );
+      continue;
+    }
+    if (isStaff && !empNo) {
+      fail("emp_no (employee number) is required for staff");
       continue;
     }
     let programmeId: string | null = null;
@@ -166,6 +219,10 @@ export async function POST(request: NextRequest) {
       }
       programmeId = pId;
       courseId = cId;
+    }
+    if ((primaryRole === "STUDENT" || primaryRole === "SCHOLAR") && !rollNo) {
+      fail("roll_no (roll number) is required for students and scholars");
+      continue;
     }
     let guideId: string | null = null;
     if (primaryRole === "SCHOLAR") {
@@ -185,9 +242,15 @@ export async function POST(request: NextRequest) {
         passwordHash: await hash(password, 10),
         role: "USER", // CSV imports regular users; promotion to Super Admin is manual
         primaryRole: primaryRole as never,
-        employmentType: employmentType ? (employmentType as never) : null,
+        employmentType: isStaff ? (employmentType as never) : null,
         designation,
         phone,
+        emergencyPhone,
+        rollNo,
+        empNo,
+        gender: gender as never,
+        phCategory,
+        nonInstituteEmail: nonInstituteEmail || null,
         departmentId,
         programmeId,
         courseId,
