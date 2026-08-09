@@ -110,6 +110,14 @@ model SsoSetting {
   updatedAt DateTime @updatedAt
 }
 
+// Simple key/value platform settings (theme mode, brand colors, …).
+// Keys: theme_mode | primary_color | accent_color
+model PlatformSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
 // Platform updates & alerts posted by the Super Admin, shown on the SSO login page.
 enum AnnouncementType {
   UPDATE

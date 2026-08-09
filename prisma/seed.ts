@@ -299,6 +299,23 @@ async function main() {
   }
 
   // ------------------------------------------------------------------
+  // Platform theme settings — default mode + brand colors. Existing
+  // values are left untouched so admin changes survive re-seeding.
+  // ------------------------------------------------------------------
+  const platformSettings: Array<{ key: string; value: string }> = [
+    { key: "theme_mode", value: "system" }, // light | dark | system
+    { key: "primary_color", value: "#0b5d4f" },
+    { key: "accent_color", value: "#d9a441" },
+  ];
+  for (const s of platformSettings) {
+    await prisma.platformSetting.upsert({
+      where: { key: s.key },
+      update: {},
+      create: s,
+    });
+  }
+
+  // ------------------------------------------------------------------
   // Platform updates & alerts shown on the SSO login page
   // ------------------------------------------------------------------
   const announcements: Array<{
@@ -352,7 +369,7 @@ async function main() {
   }
 
   console.log(
-    "sso_db seeded: 7 users with primary-role profiles, 10 departments (3 with HODs), 6 programmes, 6 courses, 4 OIDC clients, SMTP settings, 6 announcements, signing key"
+    "sso_db seeded: 7 users with primary-role profiles, 10 departments (3 with HODs), 6 programmes, 6 courses, 4 OIDC clients, SMTP settings, theme settings, 6 announcements, signing key"
   );
 }
 

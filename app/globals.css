@@ -215,6 +215,39 @@ body {
   white-space: pre-wrap;
 }
 
+/* ------------------------------------------------------------------
+ * Dark theme overrides for the login page (hardcoded light colors).
+ * ------------------------------------------------------------------ */
+[data-theme="dark"] .iipe-login-page {
+  background: linear-gradient(160deg, #0d1513 0%, #0a110f 60%, #0c1311 100%);
+}
+
+[data-theme="dark"] .iipe-login-ann,
+[data-theme="dark"] .iipe-login-viewall {
+  background: var(--iipe-surface);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .iipe-login-ann.alert {
+  background: color-mix(in srgb, var(--iipe-danger) 12%, var(--iipe-surface));
+}
+
+[data-theme="dark"] .iipe-login-ann-body {
+  color: var(--iipe-muted);
+}
+
+[data-theme="dark"] .iipe-ann-modal-full {
+  color: var(--iipe-text);
+}
+
+[data-theme="dark"] .iipe-ann-modal-close {
+  color: var(--iipe-muted);
+}
+
+[data-theme="dark"] .iipe-ann-modal-close:hover {
+  color: var(--iipe-text);
+}
+
 /* --- Responsive: stack on narrow screens --- */
 @media (max-width: 900px) {
   .iipe-login-grid {
