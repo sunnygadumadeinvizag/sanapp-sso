@@ -38,6 +38,8 @@ const USER_SELECT = {
   guideId: true,
   guide: { select: { id: true, name: true } },
   isActive: true,
+  avatar: true,
+  profileLocked: true,
   createdAt: true,
 } as const;
 
@@ -75,6 +77,8 @@ function normalize(body: Record<string, unknown>) {
         : undefined;
   const isActive =
     typeof body.isActive === "boolean" ? body.isActive : undefined;
+  const profileLocked =
+    typeof body.profileLocked === "boolean" ? body.profileLocked : undefined;
 
   const primaryRole =
     typeof body.primaryRole === "string" &&
@@ -109,6 +113,7 @@ function normalize(body: Record<string, unknown>) {
     password,
     role,
     isActive,
+    profileLocked,
     primaryRole,
     employmentType,
     designation,
@@ -292,6 +297,9 @@ export async function PATCH(request: NextRequest) {
       ...(body.password ? { passwordHash: await hash(body.password, 10) } : {}),
       ...(body.role ? { role: body.role } : {}),
       ...(body.isActive !== undefined ? { isActive: body.isActive } : {}),
+      ...(body.profileLocked !== undefined
+        ? { profileLocked: body.profileLocked }
+        : {}),
       ...(body.primaryRole !== undefined ? { primaryRole: body.primaryRole } : {}),
       ...(body.employmentType !== undefined
         ? { employmentType: body.employmentType }

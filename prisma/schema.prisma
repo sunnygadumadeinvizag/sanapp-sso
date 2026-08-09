@@ -82,6 +82,10 @@ model User {
   scholars       User[]           @relation("GuideOf")
   headsOf        Department[]     @relation("HodOf")
   isActive       Boolean          @default(true)
+  // Avatar image path (e.g. /uploads/avatars/{id}.png) or null.
+  avatar         String?
+  // Super Admin can lock a user's self-edits (profile edit disabled).
+  profileLocked  Boolean          @default(false)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   authCodes      AuthCode[]
@@ -111,7 +115,7 @@ model SsoSetting {
 }
 
 // Simple key/value platform settings (theme mode, brand colors, …).
-// Keys: theme_mode | primary_color | accent_color
+// Keys: theme_mode | primary_color | accent_color | locked_profile_roles
 model PlatformSetting {
   key       String   @id
   value     String

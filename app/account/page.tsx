@@ -2,6 +2,8 @@ import { cookies } from "next/headers";
 import { getPlatformNav, PageShell, UserMenu } from "iipe-common-ui";
 import { prisma } from "@/lib/prisma";
 import { verifySessionJwt } from "@/lib/crypto";
+import { getLockedProfileRoles, profileLockReason } from "@/lib/profilePolicy";
+import { ProfileEditor, type ProfileUser } from "../components/ProfileEditor";
 
 export const dynamic = "force-dynamic";
 
@@ -46,10 +48,26 @@ export default async function AccountPage() {
     return <p className="iipe-container">Session not found.</p>;
   }
 
-  const clients = await prisma.oidcClient.findMany({
-    where: { enabled: true },
-    orderBy: { name: "asc" },
-  });
+  const [clients, lockedRoles] = await Promise.all([
+    prisma.oidcClient.findMany({
+      where: { enabled: true },
+      orderBy: { name: "asc" },
+    }),
+    getLockedProfileRoles(),
+  ]);
+  const lockReason = profileLockReason(user, lockedRoles);
+
+  const profileUser: ProfileUser = {
+    id: user.id,
+    username: user.username,
+    name: user.name,
+    email: user.email,
+    phone: user.phone,
+    designation: user.designation,
+    primaryRole: user.primaryRole,
+    avatar: user.avatar,
+    profileLocked: user.profileLocked,
+  };
 
   return (
     <PageShell
@@ -65,6 +83,9 @@ export default async function AccountPage() {
             email={user.email ?? undefined}
             role={user.role === "SUPER_ADMIN" ? "Super Admin" : "User"}
             signOutHref="/logout"
+            avatarUrl={
+              user.avatar ? `${SSO_BASE_URL}${user.avatar}` : undefined
+            }
           >
             <a href={`${SSO_BASE_URL}/account`}>My Account</a>
             <a href={`${MAIN_BASE_URL}/my-apps`}>My Apps</a>
@@ -84,6 +105,12 @@ export default async function AccountPage() {
       </p>
 
       <div className="iipe-grid iipe-grid-2">
+        <ProfileEditor
+          user={profileUser}
+          ssoBaseUrl={SSO_BASE_URL}
+          lockedReason={lockReason}
+        />
+
         <div className="iipe-card">
           <h2>Identity</h2>
           <table className="iipe-table">
@@ -110,7 +137,13 @@ export default async function AccountPage() {
               </tr>
               <tr>
                 <td className="iipe-muted">Member since</td>
-                <td>{user.createdAt.toLocaleDateString()}</td>
+                <td>
+                  {user.createdAt.toLocaleDateString("en-IN", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </td>
               </tr>
             </tbody>
           </table>

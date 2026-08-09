@@ -306,6 +306,8 @@ async function main() {
     { key: "theme_mode", value: "system" }, // light | dark | system
     { key: "primary_color", value: "#0b5d4f" },
     { key: "accent_color", value: "#d9a441" },
+    // Primary roles whose self-edits are locked (comma-separated). Empty by default.
+    { key: "locked_profile_roles", value: "" },
   ];
   for (const s of platformSettings) {
     await prisma.platformSetting.upsert({
