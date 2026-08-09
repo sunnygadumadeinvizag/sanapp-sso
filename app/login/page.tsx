@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { Footer, getPlatformNav, Header } from "iipe-common-ui";
 import { prisma } from "@/lib/prisma";
+import { verifySessionJwt } from "@/lib/crypto";
 import AnnouncementsPanel from "../components/AnnouncementsPanel";
 
 export const metadata: Metadata = { title: "IIPE SSO — Sign in" };
@@ -24,6 +27,19 @@ export default async function LoginPage({
 }) {
   const params = await searchParams;
   const returnTo = params.returnTo ?? "/account";
+
+  // Only allow local paths to avoid open redirects (same rule as /api/login).
+  const safeReturn =
+    returnTo.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/account";
+
+  // Already signed in? Send the user where they were going instead of
+  // showing the login form again.
+  const store = await cookies();
+  const session = store.get("sso_session")?.value ?? "";
+  const claims = await verifySessionJwt(session);
+  if (claims) {
+    redirect(safeReturn);
+  }
 
   // Platform updates & alerts posted by the Super Admin (published only).
   const announcements: Announcement[] = await prisma.announcement.findMany({
@@ -81,7 +97,7 @@ export default async function LoginPage({
               )}
 
               <form action="/api/login" method="post">
-                <input type="hidden" name="returnTo" value={returnTo} />
+                <input type="hidden" name="returnTo" value={safeReturn} />
                 <div className="iipe-field">
                   <label className="iipe-label" htmlFor="username">
                     Username
