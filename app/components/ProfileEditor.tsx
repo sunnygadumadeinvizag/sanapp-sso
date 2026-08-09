@@ -34,6 +34,10 @@ export function ProfileEditor({
   );
   const [emergencyPhone, setEmergencyPhone] = useState(user.emergencyPhone ?? "");
   const [avatar, setAvatar] = useState<string | null>(user.avatar);
+  // Bumped only when the avatar actually changes, so the rendered src stays
+  // identical between server and client (Date.now() in render would break
+  // hydration) while uploads over the same filename still bypass the cache.
+  const [avatarVersion, setAvatarVersion] = useState(0);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -65,6 +69,7 @@ export function ProfileEditor({
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error ?? "Upload failed");
       setAvatar(data.avatar as string);
+      setAvatarVersion((v) => v + 1);
       setNotice("Profile picture updated.");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
@@ -82,6 +87,7 @@ export function ProfileEditor({
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error ?? "Remove failed");
       setAvatar(null);
+      setAvatarVersion(0);
       setNotice("Profile picture removed.");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Remove failed");
@@ -150,7 +156,7 @@ export function ProfileEditor({
           {avatar ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={`${ssoBaseUrl}${avatar}?v=${Date.now()}`}
+              src={`${ssoBaseUrl}${avatar}${avatarVersion > 0 ? `?v=${avatarVersion}` : ""}`}
               alt=""
               width={72}
               height={72}
