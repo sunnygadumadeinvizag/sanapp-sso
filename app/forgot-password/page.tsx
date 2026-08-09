@@ -38,6 +38,7 @@ export default function ForgotPasswordPage() {
         navItems={getPlatformNav({
           mainBaseUrl: MAIN_BASE_URL,
           ssoBaseUrl: SSO_BASE_URL,
+          signedOut: true,
         })}
       />
       <div className="iipe-center-page">

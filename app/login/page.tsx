@@ -46,6 +46,7 @@ export default async function LoginPage({
         navItems={getPlatformNav({
           mainBaseUrl: MAIN_BASE_URL,
           ssoBaseUrl: SSO_BASE_URL,
+          signedOut: true,
         })}
       />
       <div className="iipe-login-page">
