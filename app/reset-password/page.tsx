@@ -2,7 +2,10 @@
 
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { Logo } from "iipe-common-ui";
+import { Footer, getPlatformNav, Header, Logo } from "iipe-common-ui";
+
+const SSO_BASE_URL = process.env.NEXT_PUBLIC_SSO_BASE_URL ?? "http://localhost:3000";
+const MAIN_BASE_URL = process.env.NEXT_PUBLIC_MAIN_BASE_URL ?? "http://localhost:3001";
 
 export default function ResetPasswordPage() {
   const params = useSearchParams();
@@ -45,105 +48,114 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 24,
-      }}
-    >
-      <div className="iipe-card" style={{ width: 400, maxWidth: "100%" }}>
-        <div style={{ marginBottom: 20 }}>
-          <Logo showText={false} />
-          <h1 style={{ margin: "14px 0 4px", fontSize: "1.3rem" }}>Reset password</h1>
-          <p className="iipe-muted" style={{ margin: 0 }}>
-            Enter the OTP emailed to you, then choose a new password.
-          </p>
-        </div>
-
-        {error && <div className="iipe-alert danger">{error}</div>}
-
-        {done ? (
-          <div>
-            <div className="iipe-alert success">
-              Your password has been reset. You can now sign in with your new password.
-            </div>
-            <a className="iipe-btn" href={`/login?reset=1`} style={{ textAlign: "center", display: "block" }}>
-              Sign in
-            </a>
-          </div>
-        ) : (
-          <form onSubmit={submit}>
-            <div className="iipe-field">
-              <label className="iipe-label" htmlFor="rp-username">
-                Username
-              </label>
-              <input
-                className="iipe-input"
-                id="rp-username"
-                required
-                autoFocus={!initialUsername}
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
-            <div className="iipe-field">
-              <label className="iipe-label" htmlFor="rp-otp">
-                One-time password (OTP)
-              </label>
-              <input
-                className="iipe-input"
-                id="rp-otp"
-                inputMode="numeric"
-                pattern="[0-9]{6}"
-                maxLength={6}
-                required
-                placeholder="6-digit code"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/[^0-9]/g, ""))}
-              />
-            </div>
-            <div className="iipe-field">
-              <label className="iipe-label" htmlFor="rp-password">
-                New password
-              </label>
-              <input
-                className="iipe-input"
-                id="rp-password"
-                type="password"
-                minLength={6}
-                required
-                autoComplete="new-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div className="iipe-field">
-              <label className="iipe-label" htmlFor="rp-confirm">
-                Confirm new password
-              </label>
-              <input
-                className="iipe-input"
-                id="rp-confirm"
-                type="password"
-                minLength={6}
-                required
-                autoComplete="new-password"
-                value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
-              />
-            </div>
-            <button className="iipe-btn" type="submit" disabled={busy} style={{ width: "100%" }}>
-              {busy ? "Resetting…" : "Reset password"}
-            </button>
-            <p className="iipe-muted" style={{ marginTop: 16, marginBottom: 0, textAlign: "center" }}>
-              <a href="/forgot-password">Resend OTP</a> · <a href="/login">← Back to sign in</a>
+    <>
+      <Header
+        navItems={getPlatformNav({
+          mainBaseUrl: MAIN_BASE_URL,
+          ssoBaseUrl: SSO_BASE_URL,
+        })}
+      />
+      <div className="iipe-center-page">
+        <div className="iipe-card" style={{ width: 400, maxWidth: "100%" }}>
+          <div style={{ marginBottom: 20 }}>
+            <Logo showText={false} />
+            <h1 style={{ margin: "14px 0 4px", fontSize: "1.3rem" }}>Reset password</h1>
+            <p className="iipe-muted" style={{ margin: 0 }}>
+              Enter the OTP emailed to you, then choose a new password.
             </p>
-          </form>
-        )}
+          </div>
+
+          {error && <div className="iipe-alert danger">{error}</div>}
+
+          {done ? (
+            <div>
+              <div className="iipe-alert success">
+                Your password has been reset. You can now sign in with your new password.
+              </div>
+              <a
+                className="iipe-btn"
+                href={`/login?reset=1`}
+                style={{ textAlign: "center", display: "block" }}
+              >
+                Sign in
+              </a>
+            </div>
+          ) : (
+            <form onSubmit={submit}>
+              <div className="iipe-field">
+                <label className="iipe-label" htmlFor="rp-username">
+                  Username
+                </label>
+                <input
+                  className="iipe-input"
+                  id="rp-username"
+                  required
+                  autoFocus={!initialUsername}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
+              <div className="iipe-field">
+                <label className="iipe-label" htmlFor="rp-otp">
+                  One-time password (OTP)
+                </label>
+                <input
+                  className="iipe-input"
+                  id="rp-otp"
+                  inputMode="numeric"
+                  pattern="[0-9]{6}"
+                  maxLength={6}
+                  required
+                  placeholder="6-digit code"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/[^0-9]/g, ""))}
+                />
+              </div>
+              <div className="iipe-field">
+                <label className="iipe-label" htmlFor="rp-password">
+                  New password
+                </label>
+                <input
+                  className="iipe-input"
+                  id="rp-password"
+                  type="password"
+                  minLength={6}
+                  required
+                  autoComplete="new-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <div className="iipe-field">
+                <label className="iipe-label" htmlFor="rp-confirm">
+                  Confirm new password
+                </label>
+                <input
+                  className="iipe-input"
+                  id="rp-confirm"
+                  type="password"
+                  minLength={6}
+                  required
+                  autoComplete="new-password"
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                />
+              </div>
+              <button className="iipe-btn" type="submit" disabled={busy} style={{ width: "100%" }}>
+                {busy ? "Resetting…" : "Reset password"}
+              </button>
+              <p
+                className="iipe-muted"
+                style={{ marginTop: 16, marginBottom: 0, textAlign: "center" }}
+              >
+                <a href="/forgot-password">Resend OTP</a> ·{" "}
+                <a href="/login">← Back to sign in</a>
+              </p>
+            </form>
+          )}
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 }
