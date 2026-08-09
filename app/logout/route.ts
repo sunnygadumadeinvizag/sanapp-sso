@@ -9,6 +9,9 @@ import { prisma } from "@/lib/prisma";
  */
 export async function GET(request: NextRequest) {
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
+const proto = request.headers.get("x-forwarded-proto") ?? "http";
+const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host") ?? request.nextUrl.host;
+const publicOrigin = `${proto}://${host}`;
   const post = request.nextUrl.searchParams.get("post_logout_redirect_uri");
   let target: URL | null = null;
 
@@ -35,7 +38,7 @@ const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
   }
 
   const res = NextResponse.redirect(
-    new URL(target ? target.toString() : BASE_PATH + "/login?loggedOut=1", request.url),
+    new URL(target ? target.toString() : BASE_PATH + "/login?loggedOut=1", publicOrigin),
     303
   );
   res.cookies.set("sso_session", "", {
