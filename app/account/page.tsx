@@ -1,9 +1,12 @@
 import { cookies } from "next/headers";
-import { PageShell, UserMenu } from "iipe-common-ui";
+import { getPlatformNav, PageShell, UserMenu } from "iipe-common-ui";
 import { prisma } from "@/lib/prisma";
 import { verifySessionJwt } from "@/lib/crypto";
 
 export const dynamic = "force-dynamic";
+
+const SSO_BASE_URL = process.env.SSO_BASE_URL ?? "http://localhost:3000";
+const MAIN_BASE_URL = process.env.MAIN_BASE_URL ?? "http://localhost:3001";
 
 export default async function AccountPage() {
   const store = await cookies();
@@ -25,7 +28,11 @@ export default async function AccountPage() {
   return (
     <PageShell
       header={{
-        navItems: [{ label: "My Account", href: "/account", active: true }],
+        navItems: getPlatformNav({
+          mainBaseUrl: MAIN_BASE_URL,
+          ssoBaseUrl: SSO_BASE_URL,
+          active: "account",
+        }),
         right: (
           <UserMenu
             name={user.name}
@@ -33,10 +40,16 @@ export default async function AccountPage() {
             role={user.role === "SUPER_ADMIN" ? "Super Admin" : "User"}
             signOutHref="/logout"
           >
-            <a href="/account">My Account</a>
+            <a href={`${SSO_BASE_URL}/account`}>My Account</a>
+            <a href={`${MAIN_BASE_URL}/my-apps`}>My Apps</a>
           </UserMenu>
         ),
       }}
+      sidebarItems={[
+        { label: "My Account", href: `${SSO_BASE_URL}/account`, active: true },
+        { label: "My Apps", href: `${MAIN_BASE_URL}/my-apps` },
+        { label: "Main (access)", href: MAIN_BASE_URL },
+      ]}
     >
       <h1 className="iipe-page-title">My Account</h1>
       <p className="iipe-page-sub">
@@ -82,7 +95,7 @@ export default async function AccountPage() {
           <p className="iipe-muted" style={{ marginTop: 0 }}>
             These applications use the SSO for sign-in. Whether you can open
             them is managed centrally — see{" "}
-            <a href={`${process.env.MAIN_BASE_URL ?? "http://localhost:3001"}/my-apps`}>
+            <a href={`${MAIN_BASE_URL}/my-apps`}>
               your applications
             </a>
             .
