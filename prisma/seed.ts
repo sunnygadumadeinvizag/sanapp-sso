@@ -243,6 +243,7 @@ async function main() {
       description: "IIPE Main — manages which users may access which applications",
       redirectUris: [
         "http://localhost:3001/auth/callback",
+        "http://intranet.iipe.ac.in/main/auth/callback",
         "https://intranet.iipe.ac.in/main/auth/callback",
       ].join(","),
     },
@@ -253,6 +254,7 @@ async function main() {
       description: "Independent application #1 (own database, own roles)",
       redirectUris: [
         "http://localhost:3002/auth/callback",
+        "http://intranet.iipe.ac.in/app1/auth/callback",
         "https://intranet.iipe.ac.in/app1/auth/callback",
       ].join(","),
     },
@@ -263,6 +265,7 @@ async function main() {
       description: "Independent application #2 (own database, own roles)",
       redirectUris: [
         "http://localhost:3003/auth/callback",
+        "http://intranet.iipe.ac.in/app2/auth/callback",
         "https://intranet.iipe.ac.in/app2/auth/callback",
       ].join(","),
     },
@@ -273,6 +276,7 @@ async function main() {
       description: "Independent application #3 (own database, own roles)",
       redirectUris: [
         "http://localhost:3004/auth/callback",
+        "http://intranet.iipe.ac.in/app3/auth/callback",
         "https://intranet.iipe.ac.in/app3/auth/callback",
       ].join(","),
     },
