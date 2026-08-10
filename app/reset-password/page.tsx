@@ -161,8 +161,8 @@ function ResetPasswordPageInner() {
                 className="iipe-muted"
                 style={{ marginTop: 16, marginBottom: 0, textAlign: "center" }}
               >
-                <a href="/forgot-password">Resend OTP</a> ·{" "}
-                <a href="/login">← Back to sign in</a>
+                <a href={apiPath("/forgot-password")}>Resend OTP</a> ·{" "}
+                <a href={apiPath("/login")}>← Back to sign in</a>
               </p>
             </form>
           )}

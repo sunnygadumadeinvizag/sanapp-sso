@@ -129,7 +129,7 @@ export default async function LoginPage({
               </form>
 
               <p style={{ marginTop: 12, marginBottom: 0, textAlign: "center" }}>
-                <a href="/forgot-password">Forgot password?</a>
+                <a href={apiPath("/forgot-password")}>Forgot password?</a>
               </p>
 
               <p className="iipe-muted" style={{ marginTop: 16, marginBottom: 0 }}>

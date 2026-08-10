@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
                 className="iipe-muted"
                 style={{ marginTop: 16, marginBottom: 0, textAlign: "center" }}
               >
-                <a href="/login">← Back to sign in</a>
+                <a href={apiPath("/login")}>← Back to sign in</a>
               </p>
             </div>
           ) : (
@@ -100,7 +100,7 @@ export default function ForgotPasswordPage() {
                 className="iipe-muted"
                 style={{ marginTop: 16, marginBottom: 0, textAlign: "center" }}
               >
-                <a href="/login">← Back to sign in</a>
+                <a href={apiPath("/login")}>← Back to sign in</a>
               </p>
             </form>
           )}
