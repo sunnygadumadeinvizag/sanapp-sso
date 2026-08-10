@@ -280,6 +280,17 @@ async function main() {
         "https://intranet.iipe.ac.in/app3/auth/callback",
       ].join(","),
     },
+    {
+      clientId: "iipe-app4",
+      clientSecret: "app4_dev_client_secret",
+      name: "Facilities Booking",
+      description: "Independent application #4 (own database, own roles) — building and slot booking in IST",
+      redirectUris: [
+        "http://localhost:3005/auth/callback",
+        "http://intranet.iipe.ac.in/app4/auth/callback",
+        "https://intranet.iipe.ac.in/app4/auth/callback",
+      ].join(","),
+    },
   ];
 
   for (const c of clients) {
