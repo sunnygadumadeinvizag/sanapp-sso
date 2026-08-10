@@ -1,4 +1,5 @@
 "use client";
+import { apiPath } from "iipe-common-ui";
 
 import { useRef, useState } from "react";
 
@@ -65,7 +66,7 @@ export function ProfileEditor({
     try {
       const form = new FormData();
       form.append("file", file);
-      const res = await fetch("/api/me/avatar", { method: "POST", body: form });
+      const res = await fetch(apiPath("/api/me/avatar"), { method: "POST", body: form });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error ?? "Upload failed");
       setAvatar(data.avatar as string);
@@ -83,7 +84,7 @@ export function ProfileEditor({
     setNotice(null);
     setBusy(true);
     try {
-      const res = await fetch("/api/me/avatar", { method: "DELETE" });
+      const res = await fetch(apiPath("/api/me/avatar"), { method: "DELETE" });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error ?? "Remove failed");
       setAvatar(null);
@@ -106,7 +107,7 @@ export function ProfileEditor({
     }
     setBusy(true);
     try {
-      const res = await fetch("/api/me/profile", {
+      const res = await fetch(apiPath("/api/me/profile"), {
         method: "PATCH",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({

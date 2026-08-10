@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { Footer, getPlatformNav, Header } from "iipe-common-ui";
+import { apiPath, Footer, getPlatformNav, Header } from "iipe-common-ui";
 import { prisma } from "@/lib/prisma";
 import { verifySessionJwt } from "@/lib/crypto";
 import AnnouncementsPanel from "../components/AnnouncementsPanel";
@@ -91,7 +91,7 @@ export default async function LoginPage({
                 </div>
               )}
 
-              <form action="/api/login" method="post">
+              <form action={apiPath("/api/login")} method="post">
                 <input type="hidden" name="returnTo" value={safeReturn} />
                 <div className="iipe-field">
                   <label className="iipe-label" htmlFor="username">

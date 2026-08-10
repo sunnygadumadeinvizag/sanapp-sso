@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Footer, getPlatformNav, Header, Logo } from "iipe-common-ui";
+import { apiPath, Footer, getPlatformNav, Header, Logo } from "iipe-common-ui";
 
 const SSO_BASE_URL = process.env.NEXT_PUBLIC_SSO_BASE_URL ?? "http://localhost:3000";
 const MAIN_BASE_URL = process.env.NEXT_PUBLIC_MAIN_BASE_URL ?? "http://localhost:3001";
@@ -17,7 +17,7 @@ export default function ForgotPasswordPage() {
     setBusy(true);
     setError(null);
     try {
-      const res = await fetch("/api/forgot-password", {
+      const res = await fetch(apiPath("/api/forgot-password"), {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ username }),
