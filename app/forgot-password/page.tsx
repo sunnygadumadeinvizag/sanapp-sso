@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { apiPath, Footer, getPlatformNav, Header, Logo } from "iipe-common-ui";
 
 const SSO_BASE_URL = process.env.NEXT_PUBLIC_SSO_BASE_URL ?? "http://localhost:3000";
@@ -11,6 +11,8 @@ export default function ForgotPasswordPage() {
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [captcha, setCaptcha] = useState<{ token: string; svg: string } | null>(null);
+  const [captchaAnswer, setCaptchaAnswer] = useState("");
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -20,15 +22,45 @@ export default function ForgotPasswordPage() {
       const res = await fetch(apiPath("/api/forgot-password"), {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ username }),
+        body: JSON.stringify({
+          username,
+          captchaToken: captcha?.token ?? "",
+          captchaAnswer,
+        }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error ?? "Request failed");
+      if (!res.ok) {
+        refreshCaptcha();
+        throw new Error(data.error ?? "Request failed");
+      }
       setDone(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Request failed");
     } finally {
       setBusy(false);
+    }
+  }
+
+  // Load a fresh security check when the page opens.
+  useEffect(() => {
+    let alive = true;
+    fetch(apiPath("/api/captcha"))
+      .then((r) => r.json())
+      .then((d) => alive && setCaptcha(d))
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  async function refreshCaptcha() {
+    setCaptcha(null);
+    try {
+      const r = await fetch(apiPath("/api/captcha"));
+      const d = await r.json();
+      setCaptcha(d);
+    } catch {
+      setError("Could not load the security check. Please reload the page.");
     }
   }
 
@@ -92,6 +124,44 @@ export default function ForgotPasswordPage() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
+              </div>
+              <div className="iipe-field">
+                <label className="iipe-label" htmlFor="fp-captcha">
+                  Security check
+                </label>
+                <div className="iipe-captcha-row">
+                  {captcha ? (
+                    <>
+                      {/* eslint-disable-next-line react/no-danger */}
+                      <div
+                        className="iipe-captcha"
+                        dangerouslySetInnerHTML={{ __html: captcha.svg }}
+                      />
+                      <button
+                        type="button"
+                        className="iipe-captcha-refresh"
+                        onClick={refreshCaptcha}
+                        aria-label="New code"
+                        title="New code"
+                      >
+                        ↻
+                      </button>
+                    </>
+                  ) : (
+                    <span className="iipe-muted">Loading security check…</span>
+                  )}
+                  <input
+                    className="iipe-input"
+                    id="fp-captcha"
+                    name="captchaAnswer"
+                    placeholder="Answer"
+                    inputMode="numeric"
+                    autoComplete="off"
+                    required
+                    value={captchaAnswer}
+                    onChange={(e) => setCaptchaAnswer(e.target.value)}
+                  />
+                </div>
               </div>
               <button className="iipe-btn" type="submit" disabled={busy} style={{ width: "100%" }}>
                 {busy ? "Sending OTP…" : "Send OTP"}
