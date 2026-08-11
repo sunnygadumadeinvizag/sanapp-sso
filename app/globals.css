@@ -64,17 +64,25 @@ body {
   grid-template-columns: repeat(2, minmax(0, 540px));
   justify-content: center;
   gap: 48px;
-  align-items: start;
+  /* Both panels start AND end on the same lines — the shorter one stretches
+     so the sign-in card and the updates & alerts panel are always level. */
+  align-items: stretch;
   width: 100%;
 }
 
 .iipe-login-card {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0;
 }
 
 /* --- Updates & alerts panel --- */
 .iipe-login-updates {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .iipe-login-updates-head {
@@ -93,7 +101,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  max-height: calc(100vh - 400px);
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -188,6 +197,62 @@ body {
 
 .iipe-login-viewall:hover {
   border-color: var(--iipe-primary, #1f6feb);
+}
+
+/* --- Captcha (login + forgot-password security check) --- */
+.iipe-captcha-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.iipe-captcha {
+  border: 1px solid var(--iipe-border, #dbe4ee);
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  line-height: 0;
+  background: #eef2f7;
+}
+
+.iipe-captcha svg {
+  display: block;
+}
+
+.iipe-captcha-row .iipe-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.iipe-captcha-refresh {
+  background: #ffffff;
+  border: 1px solid var(--iipe-border, #dbe4ee);
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--iipe-primary, #1f6feb);
+  flex-shrink: 0;
+}
+
+.iipe-captcha-refresh:hover {
+  border-color: var(--iipe-primary, #1f6feb);
+}
+
+[data-theme="dark"] .iipe-captcha {
+  border-color: var(--iipe-border);
+}
+
+[data-theme="dark"] .iipe-captcha-refresh {
+  background: var(--iipe-surface);
+  border-color: var(--iipe-border);
+}
+
+@media (max-width: 640px) {
+  .iipe-captcha-row {
+    flex-wrap: wrap;
+  }
 }
 
 /* Modal with the complete update(s) — full text, no clamping. */
@@ -288,9 +353,6 @@ body {
   .iipe-login-grid {
     grid-template-columns: 1fr;
     gap: 24px;
-  }
-  .iipe-login-ann-list {
-    max-height: none;
   }
 }
 

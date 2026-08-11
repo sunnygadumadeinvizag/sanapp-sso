@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { apiPath, Footer, getPlatformNav, Header } from "iipe-common-ui";
 import { prisma } from "@/lib/prisma";
 import { verifySessionJwt } from "@/lib/crypto";
+import { createCaptchaChallenge } from "@/lib/captcha";
 import AnnouncementsPanel from "../components/AnnouncementsPanel";
 
 export const metadata: Metadata = { title: "IIPE SSO — Sign in" };
@@ -49,6 +50,9 @@ export default async function LoginPage({
     take: 12,
   });
 
+  // Security check rendered on every visit (signed token + SVG question).
+  const captcha = await createCaptchaChallenge();
+
   return (
     <>
       <Header
@@ -79,7 +83,12 @@ export default async function LoginPage({
                 Sign in once to access all IIPE applications
               </p>
 
-              {params.error && (
+              {params.error === "captcha" && (
+                <div className="iipe-alert danger">
+                  Security check failed. Please try again.
+                </div>
+              )}
+              {params.error && params.error !== "captcha" && (
                 <div className="iipe-alert danger">Invalid username or password.</div>
               )}
               {params.loggedOut && (
@@ -122,6 +131,29 @@ export default async function LoginPage({
                     required
                     suppressHydrationWarning
                   />
+                </div>
+                <div className="iipe-field">
+                  <label className="iipe-label" htmlFor="captcha">
+                    Security check
+                  </label>
+                  <div className="iipe-captcha-row">
+                    {/* eslint-disable-next-line react/no-danger */}
+                    <div
+                      className="iipe-captcha"
+                      dangerouslySetInnerHTML={{ __html: captcha.svg }}
+                    />
+                    <input type="hidden" name="captchaToken" value={captcha.token} />
+                    <input
+                      className="iipe-input"
+                      id="captcha"
+                      name="captchaAnswer"
+                      placeholder="Answer"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      required
+                      suppressHydrationWarning
+                    />
+                  </div>
                 </div>
                 <button className="iipe-btn" type="submit" style={{ width: "100%" }}>
                   Sign in

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { compare } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { createSessionJwt } from "@/lib/crypto";
+import { verifyCaptcha } from "@/lib/captcha";
 
 export async function POST(request: NextRequest) {
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
@@ -22,6 +23,18 @@ const publicOrigin = `${proto}://${host}`;
       new URL(BASE_PATH + `/login?error=1&returnTo=${encodeURIComponent(safeReturn)}`, publicOrigin),
       303
     );
+
+  // Security check — enforced before any credentials are looked up.
+  const captchaOk = await verifyCaptcha(
+    String(form.get("captchaToken") ?? ""),
+    String(form.get("captchaAnswer") ?? "")
+  );
+  if (!captchaOk) {
+    return NextResponse.redirect(
+      new URL(BASE_PATH + `/login?error=captcha&returnTo=${encodeURIComponent(safeReturn)}`, publicOrigin),
+      303
+    );
+  }
 
   if (!username || !password) return fail();
 

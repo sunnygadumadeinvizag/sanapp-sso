@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { hash } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { sendPlainTextEmail } from "@/lib/mailer";
+import { verifyCaptcha } from "@/lib/captcha";
 
 const OTP_TTL_MS = 10 * 60 * 1000; // 10 minutes
 
@@ -18,6 +19,19 @@ function generateOtp(): string {
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}));
   const username = typeof body.username === "string" ? body.username.trim() : "";
+
+  // Security check — verified before anything else, so unknown usernames are
+  // still protected against automated probing.
+  const captchaOk = await verifyCaptcha(
+    typeof body.captchaToken === "string" ? body.captchaToken : "",
+    typeof body.captchaAnswer === "string" ? body.captchaAnswer : ""
+  );
+  if (!captchaOk) {
+    return NextResponse.json(
+      { error: "Security check failed. Please try again." },
+      { status: 400 }
+    );
+  }
 
   if (!username) {
     return NextResponse.json({ error: "username is required" }, { status: 400 });
