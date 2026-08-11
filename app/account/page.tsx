@@ -99,6 +99,7 @@ export default async function AccountPage() {
           ssoBaseUrl: SSO_BASE_URL,
           active: "account",
         }),
+        appsLauncherHref: `${MAIN_BASE_URL}/my-apps`,
         right: (
           <UserMenu
             name={user.name}
