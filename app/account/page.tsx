@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { verifySessionJwt } from "@/lib/crypto";
 import { getLockedProfileRoles, profileLockReason } from "@/lib/profilePolicy";
 import { ProfileEditor, type ProfileUser } from "../components/ProfileEditor";
+import { ChangePasswordCard } from "../components/ChangePasswordCard";
 
 export const dynamic = "force-dynamic";
 
@@ -133,6 +134,8 @@ export default async function AccountPage() {
           ssoBaseUrl={SSO_BASE_URL}
           lockedReason={lockReason}
         />
+
+        <ChangePasswordCard />
 
         <div className="iipe-card">
           <h2>Identity</h2>
