@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { apiPath } from "iipe-common-ui";
 
 export function ChangePasswordCard() {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -15,7 +16,7 @@ export function ChangePasswordCard() {
     setNotice(null);
     setBusy(true);
     try {
-      const res = await fetch("/api/change-password", {
+      const res = await fetch(apiPath("/api/change-password"), {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
