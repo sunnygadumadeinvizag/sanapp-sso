@@ -114,6 +114,12 @@ export default async function AccountPage() {
           >
             <a href={`${SSO_BASE_URL}/account`}>My Account</a>
             <a href={`${MAIN_BASE_URL}/my-apps`}>My Apps</a>
+            {user.role === "SUPER_ADMIN" && (
+              <>
+                <div className="iipe-dropdown-section">Admin Console</div>
+                <a href={`${MAIN_BASE_URL}/admin-console`}>Admin Console</a>
+              </>
+            )}
           </UserMenu>
         ),
       }}
