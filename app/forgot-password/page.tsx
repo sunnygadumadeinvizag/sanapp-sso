@@ -67,6 +67,7 @@ export default function ForgotPasswordPage() {
   return (
     <>
       <Header
+        appName="SSO"
         navItems={getPlatformNav({
           mainBaseUrl: MAIN_BASE_URL,
           ssoBaseUrl: SSO_BASE_URL,

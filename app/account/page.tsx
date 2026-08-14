@@ -94,6 +94,7 @@ export default async function AccountPage() {
 
   return (
     <PageShell
+      appName="SSO"
       header={{
         navItems: getPlatformNav({
           mainBaseUrl: MAIN_BASE_URL,
