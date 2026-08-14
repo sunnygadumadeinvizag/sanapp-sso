@@ -46,6 +46,7 @@ const USER_SELECT = {
   guideId: true,
   guide: { select: { id: true, name: true } },
   isActive: true,
+  isTest: true,
   avatar: true,
   profileLocked: true,
   createdAt: true,

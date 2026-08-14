@@ -20,6 +20,7 @@ type SeedUser = {
   empNo?: string | null;
   programmeId?: string | null;
   courseId?: string | null;
+  isTest?: boolean;
 };
 
 async function main() {
@@ -99,6 +100,7 @@ async function main() {
   const users: SeedUser[] = [
     {
       username: "sanyasi",
+      isTest: true,
       email: "sanyasi.naidu@iipe.ac.in",
       name: "Sanyasi Naidu",
       passwordHash,
@@ -113,6 +115,7 @@ async function main() {
     },
     {
       username: "lakshmi",
+      isTest: true,
       email: "lakshmi@iipe.ac.in",
       name: "Lakshmi Devi",
       passwordHash,
@@ -127,6 +130,7 @@ async function main() {
     },
     {
       username: "admin",
+      isTest: true,
       email: "admin@iipe.ac.in",
       name: "System Administrator",
       passwordHash: adminHash,
@@ -141,6 +145,7 @@ async function main() {
     },
     {
       username: "ramesh",
+      isTest: true,
       email: "ramesh.kumar@iipe.ac.in",
       name: "Ramesh Kumar",
       passwordHash,
@@ -155,6 +160,7 @@ async function main() {
     },
     {
       username: "geeta",
+      isTest: true,
       email: "geeta.sharma@iipe.ac.in",
       name: "Geeta Sharma",
       passwordHash,
@@ -168,6 +174,7 @@ async function main() {
     },
     {
       username: "kiran",
+      isTest: true,
       email: "kiran.rao@iipe.ac.in",
       name: "Kiran Rao",
       passwordHash,
@@ -182,6 +189,7 @@ async function main() {
     },
     {
       username: "venkat",
+      isTest: true,
       email: "venkat.reddy@iipe.ac.in",
       name: "Venkat Reddy",
       passwordHash,

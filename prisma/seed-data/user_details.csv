@@ -1,0 +1,80 @@
+"uid","username","firstname","lastname","usertype","joiningdate","dept_code","designation","created_by","created_time","updated_by","updated_time","isactive","gender","email","group","usercode"
+34,"accountant","Mr. Yenneti Rama Rao","","Employee","2020-01-20","NONACAD","Accountant","admin",NULL,NULL,NULL,True,"M","accountant@iipe.ac.in","C",NULL
+39,"adityasingh","Dr. Aditya Kumar Singh","","Employee","2026-05-12","NONACAD","Assistant Registrar","admin",NULL,NULL,NULL,True,"M","adityasingh@iipe.ac.in","A",NULL
+35,"aecivil","Mr. Gande Shiva Kumar","","Employee","2020-01-29","NONACAD","Assistant Engineer (Civil)","admin",NULL,NULL,NULL,True,"M","aecivil@iipe.ac.in","B",NULL
+36,"aeelectrical","Mr. Kondaparthi Nagesh","","Employee","2020-02-07","NONACAD","Assistant Engineer (Electrical)","admin",NULL,NULL,NULL,True,"M","aeelectrical@iipe.ac.in","B",NULL
+11,"aparoy.bio","Dr. Aparoy Polamarasetty","","Employee","2019-07-18","H&S","Associate Professor","admin",NULL,NULL,NULL,True,"M","aparoy.bio@iipe.ac.in","A",NULL
+5,"arun.pujarimec","Dr. Arun Kumar Pujari","","Employee","2019-07-10","ME","Assistant Professor","admin",NULL,NULL,NULL,True,"M","arun.pujarimec@iipe.ac.in","A",NULL
+8,"chchgupta.chm","Dr. Chanchayya Gupta Chandaluri","","Employee","2019-07-12","H&S","Assistant Professor","admin",NULL,NULL,NULL,True,"M","chchgupta.chm@iipe.ac.in","A",NULL
+7,"cvrao1972.cse","Dr. Chandakanna Veerabhadra Rao","","Employee","2019-07-11","ME","Assistant Professor","admin",NULL,NULL,NULL,True,"M","cvrao1972.cse@iipe.ac.in","A",NULL
+3,"dam.geo","Dr. Deepak Amban Mishra","","Employee","2019-07-10","PE&ES","Assistant Professor","admin",NULL,NULL,NULL,True,"M","dam.geo@iipe.ac.in","A",NULL
+17,"dipankar.che","Dr. Dipankar Pal","","Employee","2019-08-07","CE","Assistant Professor","admin",NULL,NULL,NULL,True,"M","dipankar.che@iipe.ac.in","A",NULL
+24,"director","DIRECTOR","","ROLE","2019-08-07","CE","DIRECTOR","admin",NULL,NULL,NULL,True,NULL,"director@iipe.ac.in","A",NULL
+53,"dkumar","Dr. Deepak Kumar","","Employee","2025-07-21","ME","Assistant Professor (Grade-I)","admin",NULL,NULL,NULL,True,"M","dkumar@iipe.ac.in","A",NULL
+51,"doaa","DOAA","","ROLE","2019-08-07","ME","DOAA","admin",NULL,NULL,NULL,False,NULL,"dofa@iipe.ac.in","A",NULL
+26,"dofa","DoFA","","ROLE","2019-08-07","ME","DoFA","admin",NULL,NULL,NULL,True,NULL,"dofa@iipe.ac.in","A",NULL
+31,"dy.registrar","Dr. B. Murali Krishna","","Employee","2019-06-27","NONACAD","Deputy Registrar","admin",NULL,NULL,NULL,True,"M","dy.registrar@iipe.ac.in","A",NULL
+52,"elizabetheldho","Dr. Elizabeth Eldho","","Employee","2025-06-24","H&S","Assistant Professor (Grade-II)","admin",NULL,NULL,NULL,True,"F","elizabetheldho@iipe.ac.in","A",NULL
+27,"estb.erp","ESTB ERP IIPE"," ","ADMIN","2020-01-20","ESTB","ESTABLISHMENT","admin",NULL,NULL,NULL,True,NULL,"estb.erp@iipe.ac.in","Z",NULL
+38,"ganeshkumar","Dr. Ganesh Kumar","","Employee","2025-10-27","PE&ES","Assistant Professor (Grade-II)","admin",NULL,NULL,NULL,True,"M","ganeshkumar@iipe.ac.in","A",NULL
+24,"geetanjali.pe","Dr. Geetanjali Chauhan","","Employee","2022-01-06","PE&ES","Assistant Professor","admin",NULL,NULL,NULL,True,"F","geetanjali.pe@iipe.ac.in","A",NULL
+39,"genius","Mr. Genius Sanjog","","Employee","2022-01-28","NONACAD","Technical Officer
+(IT System)","admin",NULL,NULL,NULL,False,"M","genius@iipe.ac.in","A",NULL
+6,"hemanth.che","Dr. Hemanth Kumar Tanneru","","Employee","2019-07-10","CE","Assistant Professor","admin",NULL,NULL,NULL,True,"M","hemanth.che@iipe.ac.in","A",NULL
+14,"himangshu.petro","Dr. Himangshu Kakati","","Employee","2019-07-22","PE&ES","Assistant Professor","admin",NULL,NULL,NULL,True,"M","himangshu.petro@iipe.ac.in","A",NULL
+19,"hod.che","HOD CE","","ROLE","2019-08-07","NONACAD","HOD","admin",NULL,NULL,NULL,True,NULL,"hod.che@iipe.ac.in","A",NULL
+20,"hod.ese","HOD ESE","","ROLE","2019-08-07","H&S","HOD","admin",NULL,NULL,NULL,True,NULL,"hod.ese@iipe.ac.in","A",NULL
+21,"hod.hs","HOD H&S","","ROLE","2019-08-07","PE&ES","HOD","admin",NULL,NULL,NULL,True,NULL,"hod.hs@iipe.ac.in","A",NULL
+22,"hod.me","HOD ME","","ROLE","2019-08-07","H&S","HOD","admin",NULL,NULL,NULL,True,NULL,"hod.me@iipe.ac.in","A",NULL
+23,"hod.pe","HOD PE&ES","","ROLE","2019-08-07","ME","HOD","admin",NULL,NULL,NULL,True,NULL,"hod.pe@iipe.ac.in","A",NULL
+38,"itosoftw","Mr. Venkata Ravi Krishna T","","Employee","2022-01-27","NONACAD","Technical Officer
+(IT Software)","admin",NULL,NULL,NULL,False,"M","itosoftw@iipe.ac.in","A",NULL
+37,"jitendra.lib","Dr. Jitendra Kumar","","Employee","2021-12-28","NONACAD","Deputy Librarian","admin",NULL,NULL,NULL,True,"M","jitendra.lib@iipe.ac.in","A",NULL
+34,"juhi.math","Dr. Juhi Chaudhary","","Employee","2025-09-15","H&S","Assistant Professor (Grade-I)","admin",NULL,NULL,NULL,True,"F","juhi.math@iipe.ac.in","A",NULL
+33,"kalika","Smt. Kalika Devi Challagali","","Employee","2019-09-04","NONACAD","Superintendent (Accounts)","admin",NULL,NULL,NULL,True,"F","kalika@iipe.ac.in","B",NULL
+20,"krishnasri.che","Dr. Kurada Venkata Krishnasri","","Employee","2021-11-09","CE","Assistant Professor","admin",NULL,NULL,NULL,True,"F","krishnasri.che@iipe.ac.in","A",NULL
+30,"kumud","Dr. Kumud Malika Tripathi","","Employee","2020-01-20","H&S","Ramalingaswamy Faculty Fellow","admin",NULL,NULL,NULL,False,"F","kumud@iipe.ac.in","N",NULL
+47,"lab.pe","Mr. Goru Lakshmi Papa Rao","","Employee","2022-03-07","NONACAD","Lab Assistant
+(Petroleum Engg.)","admin",NULL,NULL,NULL,False,"M","lab.pe@iipe.ac.in","C",NULL
+29,"lakshmipaparaogoru.pe","Mr. Goru Lakshmi Papa Rao","","Employee","2022-03-07","NONACAD","Lab Assistant
+(Petroleum Engg.)","admin",NULL,NULL,NULL,True,"M","lakshmipaparaogoru.pe@iipe.ac.in","C",NULL
+40,"logistics","Mr. Appala Murthy N","","Employee","2022-02-14","NONACAD","Junior Assistant","admin",NULL,NULL,NULL,True,"M","logistics@iipe.ac.in","C",NULL
+19,"mounika.che","Dr. Balla Mounika","","Employee","2021-11-09","CE","Assistant Professor","admin",NULL,NULL,NULL,True,"F","mounika.che@iipe.ac.in","A",NULL
+9,"nagesh.eee","Dr. Geddada Nagesh","","Employee","2019-07-16","ME","Assistant Professor","admin",NULL,NULL,NULL,True,"M","nagesh.eee@iipe.ac.in","A",NULL
+49,"nikhil.mec","Mr. Etteneni Nikhil Kumar","","Employee","2022-03-21","NONACAD","Lab Assistant (Mechanical Engg.)","admin",NULL,NULL,NULL,False,"M","nikhil.mec@iipe.ac.in","C",NULL
+26,"nilanjanpaul.pe","Dr. Nilanjan Pal","","Employee","2022-01-27","PE&ES","Assistant Professor","admin",NULL,NULL,NULL,True,"M","nilanjanpaul.pe@iipe.ac.in","A",NULL
+32,"os","Mr. Ramakrishna Koratana","","Employee","2019-08-05","NONACAD","Office Superintendent","admin",NULL,NULL,NULL,True,"M","os@iipe.ac.in","B",NULL
+45,"praveen.pe","Mr. Nulu Praveen Kumar","","Employee","2022-02-28","NONACAD","Lab Assistant
+(Petroleum Engg.)","admin",NULL,NULL,NULL,True,"M","praveen.pe@iipe.ac.in","C",NULL
+37,"pvnrao","Mr. P. V. Narayana Rao","","Employee","2025-09-24","NONACAD","Superintending Engineer","admin",NULL,NULL,NULL,True,"M","pvnrao@iipe.ac.in","A",NULL
+12,"rajatjain.petro","Dr. Rajat Jain","","Employee","2019-07-18","PE&ES","Assistant Professor","admin",NULL,NULL,NULL,True,"M","rajatjain.petro@iipe.ac.in","A",NULL
+15,"rakam.che","Dr. Raka Mondal","","Employee","2019-07-29","CE","Assistant Professor","admin",NULL,NULL,NULL,True,"M","rakam.che@iipe.ac.in","A",NULL
+41,"rambabu.adm","Mr. Ram Babu Ulisetti","","Employee","2022-02-14","NONACAD","Junior Assistant","admin",NULL,NULL,NULL,True,"M","rambabu.adm@iipe.ac.in","C",NULL
+4,"ramu.math","Dr. Ramunaidu Randhi","","Employee","2019-07-10","H&S","Assistant Professor","admin",NULL,NULL,NULL,True,"M","ramu.math@iipe.ac.in","A",NULL
+13,"ranjan.petro","Dr. Ranjan Pramanik","","Employee","2019-07-18","PE&ES","Assistant Professor","admin",NULL,NULL,NULL,True,"M","ranjan.petro@iipe.ac.in","A",NULL
+10,"rathans.math","Dr. Samala Rathan","","Employee","2019-07-18","H&S","Assistant Professor","admin",NULL,NULL,NULL,True,"M","rathans.math@iipe.ac.in","A",NULL
+43,"ratnalasurendar","Mr. Surendar Ratnala","","Employee","2022-02-21","NONACAD","Junior Assistant","admin",NULL,NULL,NULL,True,"M","ratnalasurendar@iipe.ac.in","C",NULL
+23,"ravikiran.che","Dr. Mandapaka Ravi Kiran","","Employee","2022-01-03","CE","Assistant Professor","admin",NULL,NULL,NULL,True,"M","ravikiran.che@iipe.ac.in","A",NULL
+21,"ravikumar.che","Dr. Ravi Kumar Sonwani","","Employee","2021-11-16","CE","Assistant Professor","admin",NULL,NULL,NULL,True,"M","ravikumar.che@iipe.ac.in","A",NULL
+25,"registrar","REGISTRAR","","ROLE","2019-08-07","H&S","REGISTRAR","admin",NULL,NULL,NULL,True,NULL,"registrar@iipe.ac.in","A",NULL
+28,"rk.tammineni","Mr. Venkata Ravi Krishna T","","Employee","2022-01-27","NONACAD","Technical Officer
+(IT Software)","admin",NULL,NULL,NULL,False,"M","rk.tammineni@iipe.ac.in","A",NULL
+29,"roshan_rms.es","Dr. Roshan Kumar Singh","","Employee","2023-02-21","PE&ES","Assistant Professor","admin",NULL,NULL,NULL,True,"M","roshan_rms.es@iipe.ac.in","A",NULL
+30,"rpdwivedi","Mr. Ram Phal Dwivedi","","Employee","2023-02-27","NONACAD","Registrar","admin",NULL,NULL,NULL,True,"M","rpdwivedi@iipe.ac.in","A",NULL
+42,"sachidananda","Mr. Sachidananda Rath","","Employee","2026-05-12","NONACAD","Assistant Registrar","admin",NULL,NULL,NULL,True,"M","sachidananda@iipe.ac.in","A",NULL
+50,"sanyasinaidup.it","Mr. Sanyasi Naidu Paila","","Employee","2023-05-24","NONACAD","Junior Technical Officer (IT Software)","admin",NULL,NULL,NULL,True,"M","sanyasinaidup.it@iipe.ac.in","A",NULL
+71,"satyamohanty","Mr. Satya Narayan Mohanty","","Employee","2026-06-29","NONACAD","Deputy Registrar (Finance)","admin",NULL,NULL,NULL,True,"M","satyamohanty@iipe.ac.in","A",NULL
+44,"satyaprasad.che","Mr. Satyaprasad Yerra","","Employee","2022-02-24","NONACAD","Lab Assistant
+(Chemical Engg.)","admin",NULL,NULL,NULL,True,"M","satyaprasad.che@iipe.ac.in","C",NULL
+25,"seshagiri.che","Prof. Seshagiri Rao Ambati","","Employee","2022-01-21","CE","Professor","admin",NULL,NULL,NULL,True,"M","seshagiri.che@iipe.ac.in","A",NULL
+1,"shalivahan","Prof. Shalivahan","","Employee","2022-04-29","NONACAD","Director","admin",NULL,NULL,NULL,True,"M","shalivahan@iipe.ac.in","A",NULL
+28,"sharon.mec","Dr. Sharon H","","Employee","2022-03-02","ME","Assistant Professor","admin",NULL,NULL,NULL,True,"M","sharon.mec@iipe.ac.in","A",NULL
+16,"sivasankar.petro","Dr. Sivasankar P","","Employee","2019-08-01","PE&ES","Assistant Professor","admin",NULL,NULL,NULL,True,"M","sivasankar.petro@iipe.ac.in","A",NULL
+31,"sk.senapati","Dr. Santosh Kumar Senapati","","Employee","2023-10-05","ME","Assistant Professor","admin",NULL,NULL,NULL,True,"M","sk.senapati@iipe.ac.in","A",NULL
+42,"somesh.cs","Mr. Somesh Katta","","Employee","2022-02-17","NONACAD","Lab Assistant (CSE)","admin",NULL,NULL,NULL,True,"M","somesh.cs@iipe.ac.in","C",NULL
+2,"somnath.chm","Dr. Somnath Ghosh","","Employee","2019-07-09","H&S","Associate Professor","admin",NULL,NULL,NULL,True,"M","somnath.chm@iipe.ac.in","A",NULL
+22,"sridharpalla.che","Dr. Sridhar Palla","","Employee","2021-12-14","CE","Assistant Professor","admin",NULL,NULL,NULL,True,"M","sridharpalla.che@iipe.ac.in","A",NULL
+54,"subhampe36","Dr. Subham Bose","","Employee","2025-08-25","PE&ES","Assistant Professor (Grade-I)","admin",NULL,NULL,NULL,True,"M","subhampe36@iipe.ac.in","A",NULL
+18,"venkat_palleti.che","Dr. Venkata Reddy Palleti","","Employee","2019-10-03","CE","Assistant Professor","admin",NULL,NULL,NULL,True,"M","venkat_palleti.che@iipe.ac.in","A",NULL
+48,"vidyadhar.m","Mr. Bidyadhoro Majhi","","Employee","2022-03-14","NONACAD","Junior Assistant","admin",NULL,NULL,NULL,True,"M","vidyadhar.m@iipe.ac.in","C",NULL
+27,"vijaykumar.es","Prof. Vijaya Kumar Kopparapu","","Employee","2022-02-24","PE&ES","Professor","admin",NULL,NULL,NULL,True,"M","vijaykumar.es@iipe.ac.in","A",NULL

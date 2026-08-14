@@ -97,6 +97,8 @@ model User {
   nonInstituteEmail String?        // optional personal email
   emergencyPhone    String?        // optional emergency contact
   isActive       Boolean          @default(true)
+  // True for seed/demo accounts — real users imported from the IIPE master list are false.
+  isTest         Boolean          @default(false)
   // Avatar image path (e.g. /uploads/avatars/{id}.png) or null.
   avatar         String?
   // Super Admin can lock a user's self-edits (profile edit disabled).
