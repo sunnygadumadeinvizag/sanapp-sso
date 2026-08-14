@@ -298,8 +298,8 @@ async function main() {
       description: "Independent application #5 (own database app5_db, own roles) — ServiceNow-style request tracking",
       redirectUris: [
         "http://localhost:3006/auth/callback",
-        "http://intranet.iipe.ac.in/requests/auth/callback",
-        "https://intranet.iipe.ac.in/requests/auth/callback",
+        "http://intranet.iipe.ac.in/logrequest/auth/callback",
+        "https://intranet.iipe.ac.in/logrequest/auth/callback",
       ].join(","),
     },
   ];
