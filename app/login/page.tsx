@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { verifySessionJwt } from "@/lib/crypto";
 import { createCaptchaChallenge } from "@/lib/captcha";
 import AnnouncementsPanel from "../components/AnnouncementsPanel";
+import CaptchaBox from "../components/CaptchaBox";
 
 export const metadata: Metadata = { title: "IIPE SSO — Sign in" };
 export const dynamic = "force-dynamic";
@@ -137,24 +138,7 @@ export default async function LoginPage({
                   <label className="iipe-label" htmlFor="captcha">
                     Security check
                   </label>
-                  <div className="iipe-captcha-row">
-                    {/* eslint-disable-next-line react/no-danger */}
-                    <div
-                      className="iipe-captcha"
-                      dangerouslySetInnerHTML={{ __html: captcha.svg }}
-                    />
-                    <input type="hidden" name="captchaToken" value={captcha.token} />
-                    <input
-                      className="iipe-input"
-                      id="captcha"
-                      name="captchaAnswer"
-                      placeholder="Answer"
-                      inputMode="numeric"
-                      autoComplete="off"
-                      required
-                      suppressHydrationWarning
-                    />
-                  </div>
+                  <CaptchaBox initialToken={captcha.token} initialSvg={captcha.svg} />
                 </div>
                 <button className="iipe-btn" type="submit" style={{ width: "100%" }}>
                   Sign in

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { apiPath, Footer, getPlatformNav, Header, Logo } from "iipe-common-ui";
+import CaptchaBox from "../components/CaptchaBox";
 
 const SSO_BASE_URL = process.env.NEXT_PUBLIC_SSO_BASE_URL ?? "http://localhost:3000";
 const MAIN_BASE_URL = process.env.NEXT_PUBLIC_MAIN_BASE_URL ?? "http://localhost:3001";
@@ -11,7 +12,7 @@ export default function ForgotPasswordPage() {
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [captcha, setCaptcha] = useState<{ token: string; svg: string } | null>(null);
+  const [captchaToken, setCaptchaToken] = useState("");
   const [captchaAnswer, setCaptchaAnswer] = useState("");
 
   async function submit(e: React.FormEvent) {
@@ -24,13 +25,12 @@ export default function ForgotPasswordPage() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           username,
-          captchaToken: captcha?.token ?? "",
+          captchaToken,
           captchaAnswer,
         }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        refreshCaptcha();
         throw new Error(data.error ?? "Request failed");
       }
       setDone(true);
@@ -38,29 +38,6 @@ export default function ForgotPasswordPage() {
       setError(err instanceof Error ? err.message : "Request failed");
     } finally {
       setBusy(false);
-    }
-  }
-
-  // Load a fresh security check when the page opens.
-  useEffect(() => {
-    let alive = true;
-    fetch(apiPath("/api/captcha"))
-      .then((r) => r.json())
-      .then((d) => alive && setCaptcha(d))
-      .catch(() => {});
-    return () => {
-      alive = false;
-    };
-  }, []);
-
-  async function refreshCaptcha() {
-    setCaptcha(null);
-    try {
-      const r = await fetch(apiPath("/api/captcha"));
-      const d = await r.json();
-      setCaptcha(d);
-    } catch {
-      setError("Could not load the security check. Please reload the page.");
     }
   }
 
@@ -127,42 +104,14 @@ export default function ForgotPasswordPage() {
                 />
               </div>
               <div className="iipe-field">
-                <label className="iipe-label" htmlFor="fp-captcha">
+                <label className="iipe-label" htmlFor="captcha">
                   Security check
                 </label>
-                <div className="iipe-captcha-row">
-                  {captcha ? (
-                    <>
-                      {/* eslint-disable-next-line react/no-danger */}
-                      <div
-                        className="iipe-captcha"
-                        dangerouslySetInnerHTML={{ __html: captcha.svg }}
-                      />
-                      <button
-                        type="button"
-                        className="iipe-captcha-refresh"
-                        onClick={refreshCaptcha}
-                        aria-label="New code"
-                        title="New code"
-                      >
-                        ↻
-                      </button>
-                    </>
-                  ) : (
-                    <span className="iipe-muted">Loading security check…</span>
-                  )}
-                  <input
-                    className="iipe-input"
-                    id="fp-captcha"
-                    name="captchaAnswer"
-                    placeholder="Answer"
-                    inputMode="numeric"
-                    autoComplete="off"
-                    required
-                    value={captchaAnswer}
-                    onChange={(e) => setCaptchaAnswer(e.target.value)}
-                  />
-                </div>
+                <CaptchaBox
+                  answer={captchaAnswer}
+                  onAnswer={setCaptchaAnswer}
+                  onToken={setCaptchaToken}
+                />
               </div>
               <button className="iipe-btn" type="submit" disabled={busy} style={{ width: "100%" }}>
                 {busy ? "Sending OTP…" : "Send OTP"}

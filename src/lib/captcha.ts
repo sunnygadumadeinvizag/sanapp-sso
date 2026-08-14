@@ -10,7 +10,7 @@ import { SignJWT, jwtVerify } from "jose";
  */
 
 const SECRET = new TextEncoder().encode(process.env.SSO_SESSION_SECRET!);
-const CAPTCHA_TTL_S = 5 * 60; // 5 minutes
+const CAPTCHA_TTL_S = 10 * 60; // 10 minutes (client auto-refreshes at 8 min)
 const ISSUER = "iipe-sso-captcha";
 
 export type CaptchaChallenge = {
