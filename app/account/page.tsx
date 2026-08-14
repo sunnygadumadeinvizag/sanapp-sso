@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { getPlatformNav, PageShell, UserMenu } from "iipe-common-ui";
+import { getPlatformNav, PageShell, UserMenu } from "sanapp-common-ui";
 import { prisma } from "@/lib/prisma";
 import { verifySessionJwt } from "@/lib/crypto";
 import { getLockedProfileRoles, profileLockReason } from "@/lib/profilePolicy";

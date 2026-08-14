@@ -1,5 +1,5 @@
 {
-  "name": "iipe-sso",
+  "name": "sanapp-sso",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -17,13 +17,13 @@
     "@prisma/client": "7.9.1",
     "bcryptjs": "^3.0.2",
     "dotenv": "^17.0.0",
-    "iipe-common-ui": "file:../iipe-common-ui",
     "jose": "^6.0.11",
     "next": "16.3.0",
     "nodemailer": "^9.0.5",
     "pg": "^8.16.0",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "sanapp-common-ui": "file:../sanapp-common-ui"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -35,5 +35,6 @@
     "tsx": "^4.20.0",
     "typescript": "^5"
   },
-  "author": "Mr. Sanyasi Naidu Paila - EMPID: NTS1023"
+  "author": "Sanyasi Naidu Paila",
+  "description": ""
 }

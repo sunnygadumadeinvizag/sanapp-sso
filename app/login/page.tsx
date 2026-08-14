@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { apiPath, Footer, getPlatformNav, Header } from "iipe-common-ui";
+import { apiPath, Footer, getPlatformNav, Header } from "sanapp-common-ui";
 import { prisma } from "@/lib/prisma";
 import { verifySessionJwt } from "@/lib/crypto";
 import { createCaptchaChallenge } from "@/lib/captcha";

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { apiPath } from "iipe-common-ui";
+import { apiPath } from "sanapp-common-ui";
 
 export function ChangePasswordCard() {
   const [currentPassword, setCurrentPassword] = useState("");

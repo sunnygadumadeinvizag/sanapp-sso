@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { apiPath, Footer, getPlatformNav, Header, Logo } from "iipe-common-ui";
+import { apiPath, Footer, getPlatformNav, Header, Logo } from "sanapp-common-ui";
 import CaptchaBox from "../components/CaptchaBox";
 
 const SSO_BASE_URL = process.env.NEXT_PUBLIC_SSO_BASE_URL ?? "http://localhost:3000";

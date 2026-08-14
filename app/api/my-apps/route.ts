@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { verifySessionJwt } from "@/lib/crypto";
 
 /**
- * GET — the user's accessible applications, proxied from iipe-main.
+ * GET — the user's accessible applications, proxied from sanapp-main.
  *
  * Feeds the shared AppsMenu (Apps launcher icon) on the SSO account page.
  * The SSO session is verified here, then main's registry is asked for the

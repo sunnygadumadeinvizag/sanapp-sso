@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
-import { apiPath, Footer, getPlatformNav, Header, Logo } from "iipe-common-ui";
+import { apiPath, Footer, getPlatformNav, Header, Logo } from "sanapp-common-ui";
 
 const SSO_BASE_URL = process.env.NEXT_PUBLIC_SSO_BASE_URL ?? "http://localhost:3000";
 const MAIN_BASE_URL = process.env.NEXT_PUBLIC_MAIN_BASE_URL ?? "http://localhost:3001";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { apiPath } from "iipe-common-ui";
+import { apiPath } from "sanapp-common-ui";
 
 /**
  * Client-side security check (math captcha).

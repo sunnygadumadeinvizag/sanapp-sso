@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-/** Key-guarded list of registered OIDC clients (used by iipe-main when
+/** Key-guarded list of registered OIDC clients (used by sanapp-main when
  *  registering applications — the client must already exist in the SSO). */
 export async function GET(request: NextRequest) {
   const key =
