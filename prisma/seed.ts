@@ -291,6 +291,17 @@ async function main() {
         "https://intranet.iipe.ac.in/facilities/auth/callback",
       ].join(","),
     },
+    {
+      clientId: "iipe-app5",
+      clientSecret: "app5_dev_client_secret",
+      name: "Log Request",
+      description: "Independent application #5 (own database app5_db, own roles) — ServiceNow-style request tracking",
+      redirectUris: [
+        "http://localhost:3006/auth/callback",
+        "http://intranet.iipe.ac.in/requests/auth/callback",
+        "https://intranet.iipe.ac.in/requests/auth/callback",
+      ].join(","),
+    },
   ];
 
   for (const c of clients) {
