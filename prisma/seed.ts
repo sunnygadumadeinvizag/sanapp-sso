@@ -24,7 +24,7 @@ type SeedUser = {
 };
 
 async function main() {
-  console.log("Seeding sso_db …");
+  console.log("Seeding sanapp_sso_db …");
 
   const passwordHash = await hash("password123", 10);
   const adminHash = await hash("admin123", 10);
@@ -245,7 +245,7 @@ async function main() {
   // ------------------------------------------------------------------
   const clients = [
     {
-      clientId: "iipe-main",
+      clientId: "sanapp-main",
       clientSecret: "main_dev_client_secret",
       name: "Central Application Management",
       description: "IIPE Main — manages which users may access which applications",
@@ -256,7 +256,7 @@ async function main() {
       ].join(","),
     },
     {
-      clientId: "iipe-app1",
+      clientId: "sanapp-app1",
       clientSecret: "app1_dev_client_secret",
       name: "Academic ERP",
       description: "Independent application #1 (own database, own roles)",
@@ -267,7 +267,7 @@ async function main() {
       ].join(","),
     },
     {
-      clientId: "iipe-app2",
+      clientId: "sanapp-app2",
       clientSecret: "app2_dev_client_secret",
       name: "Leave Management",
       description: "Independent application #2 (own database, own roles)",
@@ -278,7 +278,7 @@ async function main() {
       ].join(","),
     },
     {
-      clientId: "iipe-app3",
+      clientId: "sanapp-app3",
       clientSecret: "app3_dev_client_secret",
       name: "PhD ERP",
       description: "Independent application #3 (own database, own roles)",
@@ -289,7 +289,7 @@ async function main() {
       ].join(","),
     },
     {
-      clientId: "iipe-app4",
+      clientId: "sanapp-facilities",
       clientSecret: "app4_dev_client_secret",
       name: "Facilities Booking",
       description: "Independent application #4 (own database, own roles) — building and slot booking in IST",
@@ -300,10 +300,10 @@ async function main() {
       ].join(","),
     },
     {
-      clientId: "iipe-app5",
+      clientId: "sanapp-logrequest",
       clientSecret: "app5_dev_client_secret",
       name: "Log Request",
-      description: "Independent application #5 (own database app5_db, own roles) — ServiceNow-style request tracking",
+      description: "Independent application #5 (own database sanapp_logrequest_db, own roles) — ServiceNow-style request tracking",
       redirectUris: [
         "http://localhost:3006/auth/callback",
         "http://intranet.iipe.ac.in/logrequest/auth/callback",
@@ -430,7 +430,7 @@ async function main() {
   }
 
   console.log(
-    "sso_db seeded: 7 users with primary-role profiles, 10 departments (3 with HODs), 6 programmes, 6 courses, 4 OIDC clients, SMTP settings, theme settings, 6 announcements, signing key"
+    "sanapp_sso_db seeded: 7 users with primary-role profiles, 10 departments (3 with HODs), 6 programmes, 6 courses, 4 OIDC clients, SMTP settings, theme settings, 6 announcements, signing key"
   );
 }
 

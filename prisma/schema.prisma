@@ -8,7 +8,7 @@ datasource db {
 }
 
 // ------------------------------------------------------------------
-// IIPE Central SSO — sso_db
+// IIPE Central SSO — sanapp_sso_db
 // Owns: user identity. Owns nothing about application roles.
 // ------------------------------------------------------------------
 

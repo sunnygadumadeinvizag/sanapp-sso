@@ -7,7 +7,7 @@ export async function GET() {
     keys: [
       {
         ...jwk,
-        kid: "iipe-sso-key-1",
+        kid: "sanapp-sso-key-1",
         use: "sig",
         alg: "RS256",
       },

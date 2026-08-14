@@ -10,7 +10,7 @@ import { prisma } from "./prisma";
 
 const SESSION_SECRET = new TextEncoder().encode(process.env.SSO_SESSION_SECRET!);
 const SSO_BASE_URL = process.env.SSO_BASE_URL ?? "http://localhost:3000";
-const KID = "iipe-sso-key-1";
+const KID = "sanapp-sso-key-1";
 
 export type UserClaims = {
   sub: string;
@@ -36,7 +36,7 @@ export async function createSessionJwt(user: {
   })
     .setProtectedHeader({ alg: "HS256" })
     .setSubject(user.id)
-    .setIssuer("iipe-sso")
+    .setIssuer("sanapp-sso")
     .setIssuedAt()
     .setExpirationTime("8h")
     .sign(SESSION_SECRET);
@@ -45,7 +45,7 @@ export async function createSessionJwt(user: {
 export async function verifySessionJwt(token: string): Promise<UserClaims | null> {
   try {
     const { payload } = await jwtVerify(token, SESSION_SECRET, {
-      issuer: "iipe-sso",
+      issuer: "sanapp-sso",
     });
     return {
       sub: payload.sub!,
@@ -59,7 +59,7 @@ export async function verifySessionJwt(token: string): Promise<UserClaims | null
 }
 
 // ------------------------------------------------------------------
-// RSA signing key (RS256) — generated once, persisted in sso_db
+// RSA signing key (RS256) — generated once, persisted in sanapp_sso_db
 // ------------------------------------------------------------------
 
 async function ensureSigningKey() {

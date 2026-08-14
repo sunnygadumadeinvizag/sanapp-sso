@@ -6,7 +6,7 @@ import { prisma } from "../src/lib/prisma";
 import { PrimaryRole, EmploymentType, Gender } from "../src/generated/prisma/enums";
 
 /**
- * IIPE user import — loads the real employee master list (user_details.csv) into sso_db.
+ * IIPE user import — loads the real employee master list (user_details.csv) into sanapp_sso_db.
  *
  * - Username (employee id) is the login username.
  * - Existing users NOT in the CSV are marked isTest=true (seed/demo data).

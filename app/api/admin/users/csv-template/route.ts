@@ -105,7 +105,7 @@ export async function GET(request: NextRequest) {
   return new NextResponse(csv, {
     headers: {
       "content-type": "text/csv; charset=utf-8",
-      "content-disposition": 'attachment; filename="iipe-users-template.csv"',
+      "content-disposition": 'attachment; filename="sanapp-users-template.csv"',
     },
   });
 }

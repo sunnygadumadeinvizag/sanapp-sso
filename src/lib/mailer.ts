@@ -12,7 +12,7 @@ export async function sendPlainTextEmail(
 ): Promise<void> {
   const setting = await prisma.ssoSetting.findUnique({ where: { id: "smtp" } });
   if (!setting) {
-    throw new Error("SMTP settings are not configured in sso_db (SsoSetting table)");
+    throw new Error("SMTP settings are not configured in sanapp_sso_db (SsoSetting table)");
   }
 
   const transporter = nodemailer.createTransport({
