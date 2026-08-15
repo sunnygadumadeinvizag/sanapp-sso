@@ -310,6 +310,17 @@ async function main() {
         "https://intranet.iipe.ac.in/logrequest/auth/callback",
       ].join(","),
     },
+    {
+      clientId: "sanapp-inventory",
+      clientSecret: "app6_dev_client_secret",
+      name: "Inventory & Asset Tracking",
+      description: "Independent application #6 (inventory schema inside sanapp_logrequest_db, own roles) — IT assets, licenses, repairs and asset service requests",
+      redirectUris: [
+        "http://localhost:3007/auth/callback",
+        "http://intranet.iipe.ac.in/inventory/auth/callback",
+        "https://intranet.iipe.ac.in/inventory/auth/callback",
+      ].join(","),
+    },
   ];
 
   for (const c of clients) {
