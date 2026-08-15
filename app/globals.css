@@ -33,6 +33,8 @@ body {
 .iipe-hero {
   display: flex;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   gap: 22px;
   background: var(--iipe-surface);
   border: 1px solid var(--iipe-border);
@@ -40,6 +42,11 @@ body {
   box-shadow: var(--iipe-shadow);
   padding: 20px 26px;
   margin-bottom: 26px;
+}
+.iipe-hero-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .iipe-hero-logo {
   height: 104px;
