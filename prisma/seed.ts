@@ -256,14 +256,14 @@ async function main() {
       ].join(","),
     },
     {
-      clientId: "sanapp-app1",
-      clientSecret: "app1_dev_client_secret",
-      name: "Academic ERP",
-      description: "Independent application #1 (own database, own roles)",
+      clientId: "sanapp-wikidocs",
+      clientSecret: "wikidocs_dev_client_secret",
+      name: "Wiki Docs",
+      description: "Institute documentation wiki (own database sanapp_wikidocs_db, own roles)",
       redirectUris: [
         "http://localhost:3002/auth/callback",
-        "http://intranet.iipe.ac.in/app1/auth/callback",
-        "https://intranet.iipe.ac.in/app1/auth/callback",
+        "http://intranet.iipe.ac.in/wikidocs/auth/callback",
+        "https://intranet.iipe.ac.in/wikidocs/auth/callback",
       ].join(","),
     },
     {
@@ -330,6 +330,9 @@ async function main() {
       create: { ...c },
     });
   }
+
+  // Academic ERP was replaced by Wiki Docs — remove the old OIDC client.
+  await prisma.oidcClient.deleteMany({ where: { clientId: "sanapp-app1" } });
 
   // ------------------------------------------------------------------
   // SMTP settings (stored in DB, not env) — dev Gmail credentials
