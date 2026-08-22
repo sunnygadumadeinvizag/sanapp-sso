@@ -71,9 +71,7 @@ body {
   grid-template-columns: repeat(2, minmax(0, 540px));
   justify-content: center;
   gap: 48px;
-  /* Both panels start AND end on the same lines — the shorter one stretches
-     so the sign-in card and the updates & alerts panel are always level. */
-  align-items: stretch;
+  align-items: start;
   width: 100%;
 }
 
@@ -82,6 +80,7 @@ body {
   display: flex;
   flex-direction: column;
   margin-bottom: 0;
+  height: fit-content;
 }
 
 /* --- Updates & alerts panel --- */
