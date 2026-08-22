@@ -58,6 +58,7 @@ export default async function LoginPage({
     <>
       <Header
         appName="SSO"
+        signedOut
         navItems={getPlatformNav({
           mainBaseUrl: MAIN_BASE_URL,
           ssoBaseUrl: SSO_BASE_URL,
@@ -147,12 +148,6 @@ export default async function LoginPage({
 
               <p style={{ marginTop: 12, marginBottom: 0, textAlign: "center" }}>
                 <a href={apiPath("/forgot-password")}>Forgot password?</a>
-              </p>
-
-              <p className="iipe-muted" style={{ marginTop: 16, marginBottom: 0 }}>
-                Demo accounts: <code>sanyasi</code> / <code>password123</code> ·{" "}
-                <code>lakshmi</code> / <code>password123</code> · <code>admin</code> /{" "}
-                <code>admin123</code>
               </p>
             </div>
 

@@ -54,6 +54,7 @@ export default async function NotFoundPage() {
     <PageShell
       appName="SSO"
       header={{
+          signedOut: true,
         navItems: getPlatformNav({
           mainBaseUrl: MAIN_BASE_URL,
           ssoBaseUrl: SSO_BASE_URL,
