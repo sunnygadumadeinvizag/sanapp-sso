@@ -250,9 +250,11 @@ async function main() {
       name: "Central Application Management",
       description: "IIPE Main — manages which users may access which applications",
       redirectUris: [
-        "http://localhost:3001/auth/callback",
-        "http://intranet.iipe.ac.in/main/auth/callback",
+        "https://testintranet.iipe.ac.in/main/auth/callback",
+        "http://testintranet.iipe.ac.in/main/auth/callback",
         "https://intranet.iipe.ac.in/main/auth/callback",
+        "http://intranet.iipe.ac.in/main/auth/callback",
+        "http://localhost:3001/auth/callback",
       ].join(","),
     },
     {
@@ -261,9 +263,11 @@ async function main() {
       name: "Wiki Docs",
       description: "Institute documentation wiki (own database sanapp_wikidocs_db, own roles)",
       redirectUris: [
-        "http://localhost:3002/auth/callback",
-        "http://intranet.iipe.ac.in/wikidocs/auth/callback",
+        "https://testintranet.iipe.ac.in/wikidocs/auth/callback",
+        "http://testintranet.iipe.ac.in/wikidocs/auth/callback",
         "https://intranet.iipe.ac.in/wikidocs/auth/callback",
+        "http://intranet.iipe.ac.in/wikidocs/auth/callback",
+        "http://localhost:3002/auth/callback",
       ].join(","),
     },
     {
@@ -272,9 +276,11 @@ async function main() {
       name: "Leave Management",
       description: "Independent application #2 (own database, own roles)",
       redirectUris: [
-        "http://localhost:3003/auth/callback",
-        "http://intranet.iipe.ac.in/app2/auth/callback",
+        "https://testintranet.iipe.ac.in/app2/auth/callback",
+        "http://testintranet.iipe.ac.in/app2/auth/callback",
         "https://intranet.iipe.ac.in/app2/auth/callback",
+        "http://intranet.iipe.ac.in/app2/auth/callback",
+        "http://localhost:3003/auth/callback",
       ].join(","),
     },
     {
@@ -283,9 +289,11 @@ async function main() {
       name: "PhD ERP",
       description: "Independent application #3 (own database, own roles)",
       redirectUris: [
-        "http://localhost:3004/auth/callback",
-        "http://intranet.iipe.ac.in/app3/auth/callback",
+        "https://testintranet.iipe.ac.in/app3/auth/callback",
+        "http://testintranet.iipe.ac.in/app3/auth/callback",
         "https://intranet.iipe.ac.in/app3/auth/callback",
+        "http://intranet.iipe.ac.in/app3/auth/callback",
+        "http://localhost:3004/auth/callback",
       ].join(","),
     },
     {
@@ -294,9 +302,11 @@ async function main() {
       name: "Facilities Booking",
       description: "Independent application #4 (own database, own roles) — building and slot booking in IST",
       redirectUris: [
-        "http://localhost:3005/auth/callback",
-        "http://intranet.iipe.ac.in/facilities/auth/callback",
+        "https://testintranet.iipe.ac.in/facilities/auth/callback",
+        "http://testintranet.iipe.ac.in/facilities/auth/callback",
         "https://intranet.iipe.ac.in/facilities/auth/callback",
+        "http://intranet.iipe.ac.in/facilities/auth/callback",
+        "http://localhost:3005/auth/callback",
       ].join(","),
     },
     {
@@ -305,9 +315,11 @@ async function main() {
       name: "Log Request",
       description: "Independent application #5 (own database sanapp_logrequest_db, own roles) — ServiceNow-style request tracking",
       redirectUris: [
-        "http://localhost:3006/auth/callback",
-        "http://intranet.iipe.ac.in/logrequest/auth/callback",
+        "https://testintranet.iipe.ac.in/logrequest/auth/callback",
+        "http://testintranet.iipe.ac.in/logrequest/auth/callback",
         "https://intranet.iipe.ac.in/logrequest/auth/callback",
+        "http://intranet.iipe.ac.in/logrequest/auth/callback",
+        "http://localhost:3006/auth/callback",
       ].join(","),
     },
     {
@@ -316,9 +328,11 @@ async function main() {
       name: "Inventory & Asset Tracking",
       description: "Independent application #6 (inventory schema inside sanapp_logrequest_db, own roles) — IT assets, licenses, repairs and asset service requests",
       redirectUris: [
-        "http://localhost:3007/auth/callback",
-        "http://intranet.iipe.ac.in/inventory/auth/callback",
+        "https://testintranet.iipe.ac.in/inventory/auth/callback",
+        "http://testintranet.iipe.ac.in/inventory/auth/callback",
         "https://intranet.iipe.ac.in/inventory/auth/callback",
+        "http://intranet.iipe.ac.in/inventory/auth/callback",
+        "http://localhost:3007/auth/callback",
       ].join(","),
     },
   ];

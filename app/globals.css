@@ -364,12 +364,23 @@ body {
 }
 
 @media (max-width: 640px) {
+  .iipe-login-page {
+    padding: 20px 12px;
+  }
   .iipe-hero {
     flex-direction: column;
     text-align: center;
     padding: 18px 14px;
+    gap: 12px;
+    margin-bottom: 18px;
   }
   .iipe-hero-logo {
     height: 84px;
+  }
+  .iipe-hero-title {
+    font-size: 1.05rem;
+  }
+  .iipe-hero-native {
+    font-size: 0.9rem;
   }
 }

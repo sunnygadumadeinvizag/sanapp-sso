@@ -150,7 +150,6 @@ export default async function LoginPage({
                 <a href={apiPath("/forgot-password")}>Forgot password?</a>
               </p>
             </div>
-
             {/* Right: updates & alerts posted by the sysadmin */}
             <AnnouncementsPanel
               announcements={announcements.map((a) => ({
