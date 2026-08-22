@@ -19,7 +19,7 @@ function NotFoundBody() {
         <a className="iipe-btn" href={apiPath("/account")}>
           Go to My Account
         </a>
-        <a className="iipe-btn secondary" href={`${MAIN_BASE_URL}/my-apps`}>
+        <a className="iipe-btn secondary" href={MAIN_BASE_URL}>
           My Apps
         </a>
       </div>
@@ -59,7 +59,7 @@ export default async function NotFoundPage() {
           ssoBaseUrl: SSO_BASE_URL,
           active: "home",
         }),
-        appsLauncherHref: `${MAIN_BASE_URL}/my-apps`,
+        appsLauncherHref: MAIN_BASE_URL,
         right: (
           <UserMenu
             name={claims.name}
@@ -68,7 +68,6 @@ export default async function NotFoundPage() {
             signOutHref="/logout"
           >
             <a href={`${SSO_BASE_URL}/account`}>My Account</a>
-            <a href={`${MAIN_BASE_URL}/my-apps`}>My Apps</a>
           </UserMenu>
         ),
       }}

@@ -101,7 +101,7 @@ export default async function AccountPage() {
           ssoBaseUrl: SSO_BASE_URL,
           active: "account",
         }),
-        appsLauncherHref: `${MAIN_BASE_URL}/my-apps`,
+        appsLauncherHref: MAIN_BASE_URL,
         right: (
           <UserMenu
             name={user.name}
@@ -113,7 +113,6 @@ export default async function AccountPage() {
             }
           >
             <a href={`${SSO_BASE_URL}/account`}>My Account</a>
-            <a href={`${MAIN_BASE_URL}/my-apps`}>My Apps</a>
             {user.role === "SUPER_ADMIN" && (
               <>
                 <div className="iipe-dropdown-section">Admin Console</div>
@@ -124,9 +123,8 @@ export default async function AccountPage() {
         ),
       }}
       sidebarItems={[
-        { label: "My Account", href: `${SSO_BASE_URL}/account`, active: true },
-        { label: "My Apps", href: `${MAIN_BASE_URL}/my-apps` },
-        { label: "Main (access)", href: MAIN_BASE_URL },
+
+        { label: "Home", href: MAIN_BASE_URL },
       ]}
     >
       <h1 className="iipe-page-title">My Account</h1>
@@ -289,7 +287,7 @@ export default async function AccountPage() {
           <p className="iipe-muted" style={{ marginTop: 0 }}>
             These applications use the SSO for sign-in. Whether you can open
             them is managed centrally — see{" "}
-            <a href={`${MAIN_BASE_URL}/my-apps`}>your applications</a>.
+            <a href={MAIN_BASE_URL}>your applications</a>.
           </p>
           <ul style={{ paddingLeft: 18, marginBottom: 0 }}>
             {clients.map((c) => (
