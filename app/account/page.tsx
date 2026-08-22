@@ -125,6 +125,7 @@ export default async function AccountPage() {
       sidebarItems={[
 
         { label: "Home", href: MAIN_BASE_URL },
+        { label: "App Notifications", href: "/notifications" },
       ]}
     >
       <h1 className="iipe-page-title">My Account</h1>
