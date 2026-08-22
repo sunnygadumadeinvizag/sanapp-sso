@@ -5,10 +5,10 @@ import { createSessionJwt } from "@/lib/crypto";
 import { verifyCaptcha } from "@/lib/captcha";
 
 export async function POST(request: NextRequest) {
-const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
-const proto = request.headers.get("x-forwarded-proto") ?? "http";
-const host = request.headers.get("host") ?? request.nextUrl.host;
-const publicOrigin = `${proto}://${host}`;
+  const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || process.env.BASE_PATH || "/sso";
+  const proto = request.headers.get("x-forwarded-proto") ?? "http";
+  const host = request.headers.get("host") ?? request.nextUrl.host;
+  const publicOrigin = `${proto}://${host}`;
   const form = await request.formData();
   const username = String(form.get("username") ?? "").trim();
   const password = String(form.get("password") ?? "");
