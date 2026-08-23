@@ -68,12 +68,14 @@ export default async function LoginPage({
       <div className="iipe-login-page">
         <div className="iipe-login-stack">
           {/* Hero: official IIPE logo + institute identity (from iipe.ac.in).
-              The Hindi name, address and tagline live in the footer now. */}
+              Keep the address and tagline in the footer; the three institute
+              names stay together here for a compact bilingual/trilingual mark. */}
           <div className="iipe-hero">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={apiPath("/img/iipe-logo.png")} alt="IIPE logo" className="iipe-hero-logo" />
             <div className="iipe-hero-text">
               <div className="iipe-hero-title">INDIAN INSTITUTE OF PETROLEUM AND ENERGY</div>
+              <div className="iipe-hero-native">भारतीय पेट्रोलियम और ऊर्जा संस्थान</div>
               <div className="iipe-hero-native">భారతీయ పెట్రోలియం మరియు శక్తి విజ్ఞాన సంస్థ</div>
             </div>
           </div>
