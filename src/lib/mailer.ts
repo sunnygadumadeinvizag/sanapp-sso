@@ -22,6 +22,11 @@ export async function sendPlainTextEmail(
     auth: { user: setting.user, pass: setting.password },
   });
 
+  const fromNameSetting = await prisma.platformSetting.findUnique({
+    where: { key: "smtp_from_name" },
+  });
+  const fromName = fromNameSetting?.value?.trim() || "IIPE Intranet";
+
   // Extract raw email address if fromEmail includes <...> or extra formatting
   const cleanAddress = setting.fromEmail.includes("<")
     ? setting.fromEmail.replace(/^.*<([^>]+)>.*$/, "$1").trim()
@@ -29,7 +34,7 @@ export async function sendPlainTextEmail(
 
   await transporter.sendMail({
     from: {
-      name: "IIPE Intranet",
+      name: fromName,
       address: cleanAddress,
     },
     to,

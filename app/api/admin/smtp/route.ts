@@ -12,18 +12,22 @@ function authorized(request: NextRequest) {
 const HOST_RE = /^[a-z0-9.-]+$/i;
 
 /** Public shape: never leaks the password back to the UI. */
-function publicShape(s: {
-  host: string;
-  port: number;
-  user: string;
-  fromEmail: string;
-  password: string;
-}) {
+function publicShape(
+  s: {
+    host: string;
+    port: number;
+    user: string;
+    fromEmail: string;
+    password: string;
+  },
+  fromName: string = "IIPE Intranet"
+) {
   return {
     host: s.host,
     port: s.port,
     user: s.user,
     fromEmail: s.fromEmail,
+    fromName: fromName || "IIPE Intranet",
     // Client only needs to know whether a password is set, not its value.
     hasPassword: Boolean(s.password),
   };
@@ -37,7 +41,11 @@ export async function GET(request: NextRequest) {
   if (!setting) {
     return NextResponse.json({ configured: false, smtp: null });
   }
-  return NextResponse.json({ configured: true, smtp: publicShape(setting) });
+  const fromNameSetting = await prisma.platformSetting.findUnique({
+    where: { key: "smtp_from_name" },
+  });
+  const fromName = fromNameSetting?.value?.trim() || "IIPE Intranet";
+  return NextResponse.json({ configured: true, smtp: publicShape(setting, fromName) });
 }
 
 export async function PUT(request: NextRequest) {
@@ -49,6 +57,10 @@ export async function PUT(request: NextRequest) {
   const port = Number(body.port);
   const user = String(body.user ?? "").trim();
   const fromEmail = String(body.fromEmail ?? "").trim();
+  const fromName =
+    typeof body.fromName === "string" && body.fromName.trim()
+      ? body.fromName.trim()
+      : "IIPE Intranet";
   const password = String(body.password ?? "").trim();
 
   if (!host || !HOST_RE.test(host)) {
@@ -84,9 +96,15 @@ export async function PUT(request: NextRequest) {
     create: { id: "smtp", host, port, user, password: finalPassword, fromEmail },
   });
 
+  await prisma.platformSetting.upsert({
+    where: { key: "smtp_from_name" },
+    update: { value: fromName },
+    create: { key: "smtp_from_name", value: fromName },
+  });
+
   return NextResponse.json({
     ok: true,
-    smtp: publicShape(saved),
+    smtp: publicShape(saved, fromName),
     message: "SMTP settings saved. Emails (OTP, notifications) will use these credentials.",
   });
 }
