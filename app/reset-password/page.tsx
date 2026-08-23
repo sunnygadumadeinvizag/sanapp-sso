@@ -84,7 +84,7 @@ function ResetPasswordPageInner() {
               </div>
               <a
                 className="iipe-btn"
-                href={`/login?reset=1`}
+                href={apiPath(`/login?reset=1`)}
                 style={{ textAlign: "center", display: "block" }}
               >
                 Sign in

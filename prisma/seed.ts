@@ -32,12 +32,14 @@ async function main() {
   // ------------------------------------------------------------------
   // Departments / sections
   // ------------------------------------------------------------------
+  // Canonical teaching departments mirror iipe.ac.in/academics:
+  // Petroleum Engineering & Earth Sciences, Chemical Engineering,
+  // Mechanical Engineering, Humanities and Sciences  (+ admin sections)
   const departments = [
-    "Computer Science & Engineering",
-    "Petroleum Engineering",
+    "Petroleum Engineering & Earth Sciences",
     "Chemical Engineering",
-    "Chemistry",
     "Mechanical Engineering",
+    "Humanities and Sciences",
     "Administration",
     "Accounts & Finance",
     "Human Resources",
@@ -90,9 +92,9 @@ async function main() {
   const crs = async (name: string) =>
     (await prisma.course.findUnique({ where: { name } }))!;
 
-  const cse = await dept("Computer Science & Engineering");
-  const petroleum = await dept("Petroleum Engineering");
-  const chemistry = await dept("Chemistry");
+  const petroleum = await dept("Petroleum Engineering & Earth Sciences");
+  const cse = await dept("Humanities and Sciences");
+  const chemistry = await dept("Humanities and Sciences");
   const administration = await dept("Administration");
   const accounts = await dept("Accounts & Finance");
 

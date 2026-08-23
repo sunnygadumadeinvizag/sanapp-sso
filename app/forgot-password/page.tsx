@@ -69,13 +69,26 @@ export default function ForgotPasswordPage() {
                 If an account exists for &quot;{username}&quot;, a 6-digit OTP has been emailed to
                 it. It is valid for 10 minutes.
               </div>
-              <a
-                className="iipe-btn"
-                href={`/reset-password?username=${encodeURIComponent(username)}`}
-                style={{ textAlign: "center", display: "block" }}
-              >
-                I have my OTP — continue
-              </a>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 16 }}>
+                <a
+                  className="iipe-btn"
+                  href={apiPath(`/reset-password?username=${encodeURIComponent(username)}`)}
+                  style={{ textAlign: "center", display: "block" }}
+                >
+                  I have my OTP — Continue to Reset Password
+                </a>
+                <button
+                  type="button"
+                  className="iipe-btn secondary"
+                  style={{ textAlign: "center", display: "block", width: "100%" }}
+                  onClick={() => {
+                    setDone(false);
+                    setError(null);
+                  }}
+                >
+                  Didn&apos;t receive OTP? Resend OTP
+                </button>
+              </div>
               <p
                 className="iipe-muted"
                 style={{ marginTop: 16, marginBottom: 0, textAlign: "center" }}

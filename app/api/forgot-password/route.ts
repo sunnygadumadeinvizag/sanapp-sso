@@ -68,7 +68,9 @@ export async function POST(request: NextRequest) {
     ``,
     `This OTP is valid for 10 minutes. If you did not request a password reset, you can safely ignore this email.`,
     ``,
-    `— IIPE Intranet Platform`,
+    `Thanks,`,
+    `IIPE Intranet Team,`,
+    `IIPE Visakhapatnam`,
   ].join("\n");
 
   try {

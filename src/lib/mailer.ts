@@ -22,8 +22,16 @@ export async function sendPlainTextEmail(
     auth: { user: setting.user, pass: setting.password },
   });
 
+  // Extract raw email address if fromEmail includes <...> or extra formatting
+  const cleanAddress = setting.fromEmail.includes("<")
+    ? setting.fromEmail.replace(/^.*<([^>]+)>.*$/, "$1").trim()
+    : setting.fromEmail.trim();
+
   await transporter.sendMail({
-    from: setting.fromEmail,
+    from: {
+      name: "IIPE Intranet",
+      address: cleanAddress,
+    },
     to,
     subject,
     text, // plain text only — no HTML
