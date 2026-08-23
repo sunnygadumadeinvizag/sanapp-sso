@@ -71,10 +71,6 @@ export async function POST(request: NextRequest) {
     `— IIPE Intranet Platform`,
   ].join("\n");
 
-  // Dev convenience: echo the OTP to the server log so the flow can be tested
-  // without relying on real email delivery.
-  console.log(`[forgot-password] OTP for ${username}: ${otp}`);
-
   try {
     await sendPlainTextEmail(user.email, "IIPE password reset OTP", text);
   } catch (err) {
