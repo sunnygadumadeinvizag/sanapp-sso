@@ -31,10 +31,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ valid: false });
   }
 
+  const setting = await prisma.platformSetting.findUnique({
+    where: { key: "session_idle_minutes" },
+  });
+  const idleTimeoutMinutes = setting ? parseInt(setting.value, 10) || 30 : 30;
+
   return NextResponse.json({
     valid: true,
     sub: user.sub,
     username: user.username,
     name: user.name,
+    idleTimeoutMinutes,
+    idleTimeoutMs: idleTimeoutMinutes * 60 * 1000,
   });
 }
