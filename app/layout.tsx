@@ -4,8 +4,8 @@ import "./globals.css";
 import { ThemeScript } from "sanapp-common-ui";
 
 export const metadata: Metadata = {
-  title: "IIPE SSO — Sign in",
-  description: "Central authentication for the IIPE Intranet platform",
+  title: "IIPE Intranet Login",
+  description: "Sign in to the IIPE Intranet platform",
 };
 
 const SSO_BASE_URL = process.env.SSO_BASE_URL ?? "http://localhost:3000";

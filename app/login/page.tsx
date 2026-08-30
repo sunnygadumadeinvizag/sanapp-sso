@@ -8,7 +8,7 @@ import { createCaptchaChallenge } from "@/lib/captcha";
 import AnnouncementsPanel from "../components/AnnouncementsPanel";
 import CaptchaBox from "../components/CaptchaBox";
 
-export const metadata: Metadata = { title: "IIPE SSO — Sign in" };
+export const metadata: Metadata = { title: "IIPE Intranet Login" };
 export const dynamic = "force-dynamic";
 
 const SSO_BASE_URL = process.env.SSO_BASE_URL ?? "http://localhost:3000";
@@ -83,7 +83,7 @@ export default async function LoginPage({
           <div className="iipe-login-grid">
             {/* Left: sign-in form */}
             <div className="iipe-card iipe-login-card">
-              <h1 style={{ margin: "0 0 4px", fontSize: "1.3rem" }}>IIPE Central SSO</h1>
+              <h1 style={{ margin: "0 0 4px", fontSize: "1.3rem" }}>IIPE Intranet Login</h1>
               <p className="iipe-muted" style={{ margin: "0 0 18px" }}>
                 Sign in once to access all IIPE applications
               </p>
