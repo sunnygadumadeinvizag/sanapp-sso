@@ -11,14 +11,20 @@ export async function POST(request: NextRequest) {
   const proto = request.headers.get("x-forwarded-proto") ?? "http";
   const host = request.headers.get("host") ?? request.nextUrl.host;
   const publicOrigin = `${proto}://${host}`;
+  const MAIN_BASE_URL = process.env.MAIN_BASE_URL ?? "http://localhost:3001/main";
   const form = await request.formData();
   const username = String(form.get("username") ?? "").trim();
   const password = String(form.get("password") ?? "");
-  const returnTo = String(form.get("returnTo") ?? "/account");
+  const rawReturnTo = String(form.get("returnTo") ?? "").trim();
 
-  // Only allow local paths to avoid open redirects.
-  const safeReturn =
-    returnTo.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/account";
+  let safeReturn = MAIN_BASE_URL;
+  if (rawReturnTo && rawReturnTo !== "/account" && rawReturnTo !== "/sso/account") {
+    if (rawReturnTo.startsWith("/") && !rawReturnTo.startsWith("//")) {
+      safeReturn = rawReturnTo;
+    } else if (rawReturnTo.startsWith(MAIN_BASE_URL) || rawReturnTo.startsWith(publicOrigin)) {
+      safeReturn = rawReturnTo;
+    }
+  }
 
   const fail = () =>
     NextResponse.redirect(
@@ -52,7 +58,11 @@ export async function POST(request: NextRequest) {
 
   // 303 See Other: after a successful form POST the browser must GET the target
   // (a 307 would re-send the POST to the authorize endpoint and fail).
-  const res = NextResponse.redirect(new URL(BASE_PATH + safeReturn, publicOrigin), 303);
+  const targetUrl =
+    safeReturn.startsWith("http://") || safeReturn.startsWith("https://")
+      ? new URL(safeReturn)
+      : new URL(BASE_PATH + safeReturn, publicOrigin);
+  const res = NextResponse.redirect(targetUrl, 303);
   res.cookies.set("sso_session", token, {
     httpOnly: true,
     sameSite: "lax",

@@ -1,8 +1,9 @@
+import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { getPlatformNav, PageShell, UserMenu } from "sanapp-common-ui";
 import { prisma } from "@/lib/prisma";
 import { verifySessionJwt } from "@/lib/crypto";
-import { getLockedProfileRoles, profileLockReason } from "@/lib/profilePolicy";
+import { getLockedProfileRoles, isAccountDisplayDisabled, profileLockReason } from "@/lib/profilePolicy";
 import { ProfileEditor, type ProfileUser } from "../components/ProfileEditor";
 import { ChangePasswordCard } from "../components/ChangePasswordCard";
 
@@ -65,6 +66,11 @@ export default async function AccountPage() {
     return <p className="iipe-container">Session not found.</p>;
   }
 
+  const accountDisplayDisabled = await isAccountDisplayDisabled();
+  if (accountDisplayDisabled && user.role !== "SUPER_ADMIN") {
+    redirect(MAIN_BASE_URL);
+  }
+
   const [clients, lockedRoles] = await Promise.all([
     prisma.oidcClient.findMany({
       where: { enabled: true },
@@ -112,7 +118,9 @@ export default async function AccountPage() {
               user.avatar ? `${SSO_BASE_URL}${user.avatar}` : undefined
             }
           >
-            <a href={`${SSO_BASE_URL}/account`}>My Account</a>
+            {(!accountDisplayDisabled || user.role === "SUPER_ADMIN") && (
+              <a href={`${SSO_BASE_URL}/account`}>My Account</a>
+            )}
             {user.role === "SUPER_ADMIN" && (
               <>
                 <div className="iipe-dropdown-section">Admin Console</div>

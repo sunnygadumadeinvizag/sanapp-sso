@@ -28,11 +28,16 @@ export default async function LoginPage({
   searchParams: Promise<{ returnTo?: string; error?: string; loggedOut?: string; reset?: string }>;
 }) {
   const params = await searchParams;
-  const returnTo = params.returnTo ?? "/account";
-
-  // Only allow local paths to avoid open redirects (same rule as /api/login).
-  const safeReturn =
-    returnTo.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/account";
+  const rawReturn = params.returnTo;
+  const defaultReturn = MAIN_BASE_URL;
+  let safeReturn = defaultReturn;
+  if (rawReturn && rawReturn !== "/account" && rawReturn !== "/sso/account") {
+    if (rawReturn.startsWith("/") && !rawReturn.startsWith("//")) {
+      safeReturn = rawReturn;
+    } else if (rawReturn.startsWith(MAIN_BASE_URL) || rawReturn.startsWith(SSO_BASE_URL)) {
+      safeReturn = rawReturn;
+    }
+  }
 
   // Already signed in? Send the user where they were going instead of
   // showing the login form again.

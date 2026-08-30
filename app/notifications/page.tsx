@@ -8,6 +8,8 @@ import {
 } from "sanapp-common-ui";
 import { prisma } from "@/lib/prisma";
 
+import { isAccountDisplayDisabled } from "@/lib/profilePolicy";
+
 export const dynamic = "force-dynamic";
 
 const SSO_BASE_URL = process.env.SSO_BASE_URL ?? "http://localhost:3000";
@@ -25,6 +27,9 @@ export default async function NotificationsPage() {
     return <p className="iipe-container">Session not found.</p>;
   }
 
+  const accountDisplayDisabled = await isAccountDisplayDisabled();
+  const showAccount = !accountDisplayDisabled || user.role === "SUPER_ADMIN";
+
   return (
     <PageShell
       appName="SSO"
@@ -32,7 +37,7 @@ export default async function NotificationsPage() {
         navItems: getPlatformNav({
           mainBaseUrl: MAIN_BASE_URL,
           ssoBaseUrl: SSO_BASE_URL,
-          active: "account",
+          active: "notifications",
         }),
         appsLauncherHref: MAIN_BASE_URL,
         right: (
@@ -43,7 +48,7 @@ export default async function NotificationsPage() {
             signOutHref="/logout"
             avatarUrl={user.avatar ? `${SSO_BASE_URL}${user.avatar}` : undefined}
           >
-            <a href={`${SSO_BASE_URL}/account`}>My Account</a>
+            {showAccount && <a href={`${SSO_BASE_URL}/account`}>My Account</a>}
             {user.role === "SUPER_ADMIN" && (
               <>
                 <div className="iipe-dropdown-section">Admin Console</div>
@@ -54,7 +59,7 @@ export default async function NotificationsPage() {
         ),
       }}
       sidebarItems={[
-        { label: "My Account", href: `${SSO_BASE_URL}/account` },
+        ...(showAccount ? [{ label: "My Account", href: `${SSO_BASE_URL}/account` }] : []),
         { label: "Home", href: MAIN_BASE_URL },
         { label: "App Notifications", href: "/notifications", active: true },
       ]}

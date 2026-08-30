@@ -1,6 +1,7 @@
 import { prisma } from "./prisma";
 
 export const PROFILE_LOCK_KEY = "locked_profile_roles";
+export const ACCOUNT_DISPLAY_DISABLED_KEY = "account_display_disabled";
 
 /** Primary roles whose self-edits are disabled (from PlatformSetting). */
 export async function getLockedProfileRoles(): Promise<string[]> {
@@ -11,6 +12,14 @@ export async function getLockedProfileRoles(): Promise<string[]> {
     .split(",")
     .map((r) => r.trim().toUpperCase())
     .filter(Boolean);
+}
+
+/** Whether the My Account page and menu links are disabled for regular users. */
+export async function isAccountDisplayDisabled(): Promise<boolean> {
+  const setting = await prisma.platformSetting.findUnique({
+    where: { key: ACCOUNT_DISPLAY_DISABLED_KEY },
+  });
+  return setting?.value === "true" || setting?.value === "1";
 }
 
 /**

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { PROFILE_LOCK_KEY } from "@/lib/profilePolicy";
+import { ACCOUNT_DISPLAY_DISABLED_KEY, PROFILE_LOCK_KEY } from "@/lib/profilePolicy";
 
 const PRIMARY_ROLES = [
   "STAFF_NON_TEACHING",
@@ -22,14 +22,18 @@ export async function GET(request: NextRequest) {
   if (!authorized(request)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const setting = await prisma.platformSetting.findUnique({
-    where: { key: PROFILE_LOCK_KEY },
-  });
-  const locked = (setting?.value ?? "")
+  const [profileSetting, accountSetting] = await Promise.all([
+    prisma.platformSetting.findUnique({ where: { key: PROFILE_LOCK_KEY } }),
+    prisma.platformSetting.findUnique({ where: { key: ACCOUNT_DISPLAY_DISABLED_KEY } }),
+  ]);
+  const locked = (profileSetting?.value ?? "")
     .split(",")
     .map((r) => r.trim().toUpperCase())
     .filter(Boolean);
-  return NextResponse.json({ locked });
+  const accountDisplayDisabled =
+    accountSetting?.value === "true" || accountSetting?.value === "1";
+
+  return NextResponse.json({ locked, accountDisplayDisabled });
 }
 
 export async function PATCH(request: NextRequest) {
@@ -38,23 +42,45 @@ export async function PATCH(request: NextRequest) {
   }
 
   const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
-  if (!Array.isArray(body.locked)) {
-    return NextResponse.json(
-      { error: "locked must be an array of primary roles" },
-      { status: 400 }
-    );
+
+  let uniqueLocked: string[] | undefined;
+  if (Array.isArray(body.locked)) {
+    const locked = body.locked
+      .map((r) => String(r).trim().toUpperCase())
+      .filter((r) => (PRIMARY_ROLES as string[]).includes(r));
+    uniqueLocked = [...new Set(locked)];
+
+    await prisma.platformSetting.upsert({
+      where: { key: PROFILE_LOCK_KEY },
+      update: { value: uniqueLocked.join(",") },
+      create: { key: PROFILE_LOCK_KEY, value: uniqueLocked.join(",") },
+    });
   }
 
-  const locked = body.locked
-    .map((r) => String(r).trim().toUpperCase())
-    .filter((r) => (PRIMARY_ROLES as string[]).includes(r));
-  const unique = [...new Set(locked)];
+  let accountDisplayDisabled: boolean | undefined;
+  if (typeof body.accountDisplayDisabled === "boolean") {
+    accountDisplayDisabled = body.accountDisplayDisabled;
+    await prisma.platformSetting.upsert({
+      where: { key: ACCOUNT_DISPLAY_DISABLED_KEY },
+      update: { value: accountDisplayDisabled ? "true" : "false" },
+      create: { key: ACCOUNT_DISPLAY_DISABLED_KEY, value: accountDisplayDisabled ? "true" : "false" },
+    });
+  }
 
-  await prisma.platformSetting.upsert({
-    where: { key: PROFILE_LOCK_KEY },
-    update: { value: unique.join(",") },
-    create: { key: PROFILE_LOCK_KEY, value: unique.join(",") },
+  const [profileSetting, accountSetting] = await Promise.all([
+    prisma.platformSetting.findUnique({ where: { key: PROFILE_LOCK_KEY } }),
+    prisma.platformSetting.findUnique({ where: { key: ACCOUNT_DISPLAY_DISABLED_KEY } }),
+  ]);
+
+  const finalLocked = (profileSetting?.value ?? "")
+    .split(",")
+    .map((r) => r.trim().toUpperCase())
+    .filter(Boolean);
+  const finalAccountDisabled =
+    accountSetting?.value === "true" || accountSetting?.value === "1";
+
+  return NextResponse.json({
+    locked: finalLocked,
+    accountDisplayDisabled: finalAccountDisabled,
   });
-
-  return NextResponse.json({ locked: unique });
 }

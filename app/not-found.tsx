@@ -1,13 +1,15 @@
 import { cookies } from "next/headers";
 import { apiPath, Footer, getPlatformNav, Header, Logo, PageShell, UserMenu } from "sanapp-common-ui";
 import { verifySessionJwt } from "@/lib/crypto";
+import { prisma } from "@/lib/prisma";
+import { isAccountDisplayDisabled } from "@/lib/profilePolicy";
 
 export const dynamic = "force-dynamic";
 
 const SSO_BASE_URL = process.env.SSO_BASE_URL ?? "http://localhost:3000";
 const MAIN_BASE_URL = process.env.MAIN_BASE_URL ?? "http://localhost:3001";
 
-function NotFoundBody() {
+function NotFoundBody({ showAccount = false }: { showAccount?: boolean }) {
   return (
     <div className="iipe-card" style={{ width: 520, maxWidth: "100%" }}>
       <Logo showText={false} />
@@ -16,11 +18,13 @@ function NotFoundBody() {
         The page you are looking for does not exist or may have been moved.
       </p>
       <div className="iipe-form-actions">
-        <a className="iipe-btn" href={apiPath("/account")}>
-          Go to My Account
-        </a>
-        <a className="iipe-btn secondary" href={MAIN_BASE_URL}>
-          My Apps
+        {showAccount && (
+          <a className="iipe-btn" href={apiPath("/account")}>
+            Go to My Account
+          </a>
+        )}
+        <a className={showAccount ? "iipe-btn secondary" : "iipe-btn"} href={MAIN_BASE_URL}>
+          Main Portal
         </a>
       </div>
     </div>
@@ -30,6 +34,15 @@ function NotFoundBody() {
 export default async function NotFoundPage() {
   const store = await cookies();
   const claims = await verifySessionJwt(store.get("sso_session")?.value ?? "");
+  const user = claims
+    ? await prisma.user.findUnique({
+        where: { id: claims.sub },
+        select: { role: true },
+      })
+    : null;
+  const isSuperAdmin = user?.role === "SUPER_ADMIN";
+  const accountDisplayDisabled = await isAccountDisplayDisabled();
+  const showAccount = Boolean(claims && (!accountDisplayDisabled || isSuperAdmin));
 
   if (!claims) {
     return (
@@ -43,7 +56,7 @@ export default async function NotFoundPage() {
           })}
         />
         <div className="iipe-center-page">
-          <NotFoundBody />
+          <NotFoundBody showAccount={false} />
         </div>
         <Footer />
       </>
@@ -54,7 +67,6 @@ export default async function NotFoundPage() {
     <PageShell
       appName="SSO"
       header={{
-          signedOut: true,
         navItems: getPlatformNav({
           mainBaseUrl: MAIN_BASE_URL,
           ssoBaseUrl: SSO_BASE_URL,
@@ -65,15 +77,15 @@ export default async function NotFoundPage() {
           <UserMenu
             name={claims.name}
             email={claims.email ?? undefined}
-            role="User"
+            role={isSuperAdmin ? "Super Admin" : "User"}
             signOutHref="/logout"
           >
-            <a href={`${SSO_BASE_URL}/account`}>My Account</a>
+            {showAccount && <a href={`${SSO_BASE_URL}/account`}>My Account</a>}
           </UserMenu>
         ),
       }}
     >
-      <NotFoundBody />
+      <NotFoundBody showAccount={showAccount} />
     </PageShell>
   );
 }
