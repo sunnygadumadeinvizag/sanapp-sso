@@ -46,7 +46,14 @@ export async function POST(request: NextRequest) {
 
   if (!username || !password) return fail();
 
-  const user = await prisma.user.findUnique({ where: { username } });
+  const user = await prisma.user.findFirst({
+    where: {
+      username: {
+        equals: username,
+        mode: "insensitive",
+      },
+    },
+  });
   if (!user || !user.isActive) return fail();
 
   const ok =

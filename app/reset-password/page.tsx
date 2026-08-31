@@ -30,6 +30,16 @@ function ResetPasswordPageInner() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    const cleanUsername = username.trim();
+    const cleanOtp = otp.trim();
+    if (!cleanUsername) {
+      setError("Username is required.");
+      return;
+    }
+    if (!cleanOtp) {
+      setError("OTP is required.");
+      return;
+    }
     if (password.length < 6) {
       setError("Password must be at least 6 characters.");
       return;
@@ -43,7 +53,7 @@ function ResetPasswordPageInner() {
       const res = await fetch(apiPath("/api/reset-password"), {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ username, otp, password }),
+        body: JSON.stringify({ username: cleanUsername, otp: cleanOtp, password }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error ?? "Request failed");

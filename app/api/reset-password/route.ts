@@ -25,7 +25,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const user = await prisma.user.findUnique({ where: { username } });
+  const user = await prisma.user.findFirst({
+    where: {
+      username: {
+        equals: username,
+        mode: "insensitive",
+      },
+    },
+  });
   if (!user || !user.isActive) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }

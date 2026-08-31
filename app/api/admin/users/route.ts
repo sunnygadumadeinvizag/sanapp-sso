@@ -259,7 +259,9 @@ export async function POST(request: NextRequest) {
   }
 
   // Usernames are unique; emails deliberately are NOT (shared inboxes allowed).
-  const exists = await prisma.user.findUnique({ where: { username: body.username } });
+  const exists = await prisma.user.findFirst({
+    where: { username: { equals: body.username, mode: "insensitive" } },
+  });
   if (exists) {
     return NextResponse.json(
       { error: "A user with that username already exists" },
@@ -357,7 +359,9 @@ export async function PATCH(request: NextRequest) {
   }
 
   if (body.username) {
-    const clash = await prisma.user.findUnique({ where: { username: body.username } });
+    const clash = await prisma.user.findFirst({
+      where: { username: { equals: body.username, mode: "insensitive" } },
+    });
     if (clash && clash.id !== id) {
       return NextResponse.json(
         { error: "A user with that username already exists" },

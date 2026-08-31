@@ -17,6 +17,11 @@ export default function ForgotPasswordPage() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    const cleanUsername = username.trim();
+    if (!cleanUsername) {
+      setError("Username is required");
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
@@ -24,7 +29,7 @@ export default function ForgotPasswordPage() {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          username,
+          username: cleanUsername,
           captchaToken,
           captchaAnswer,
         }),
@@ -32,6 +37,11 @@ export default function ForgotPasswordPage() {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         throw new Error(data.error ?? "Request failed");
+      }
+      if (data.username) {
+        setUsername(data.username);
+      } else {
+        setUsername(cleanUsername);
       }
       setDone(true);
     } catch (err) {

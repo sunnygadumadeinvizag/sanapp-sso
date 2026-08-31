@@ -110,7 +110,7 @@ export default async function LoginPage({
                 </div>
               )}
 
-              <form action={apiPath("/api/login")} method="post">
+              <form id="login-form" action={apiPath("/api/login")} method="post">
                 <input type="hidden" name="returnTo" value={safeReturn} />
                 <div className="iipe-field">
                   <label className="iipe-label" htmlFor="username">
@@ -152,6 +152,21 @@ export default async function LoginPage({
                   Sign in
                 </button>
               </form>
+              <script
+                dangerouslySetInnerHTML={{
+                  __html: `
+                    (function() {
+                      var f = document.getElementById('login-form');
+                      if (f) {
+                        f.addEventListener('submit', function() {
+                          var u = f.querySelector('input[name="username"]');
+                          if (u && typeof u.value === 'string') u.value = u.value.trim();
+                        });
+                      }
+                    })();
+                  `,
+                }}
+              />
 
               <p style={{ marginTop: 12, marginBottom: 0, textAlign: "center" }}>
                 <a href={apiPath("/forgot-password")}>Forgot password?</a>

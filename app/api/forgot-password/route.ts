@@ -37,7 +37,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "username is required" }, { status: 400 });
   }
 
-  const user = await prisma.user.findUnique({ where: { username } });
+  const user = await prisma.user.findFirst({
+    where: {
+      username: {
+        equals: username,
+        mode: "insensitive",
+      },
+    },
+  });
   // Do not reveal whether the username exists; always answer ok.
   if (!user || !user.isActive || !user.email) {
     return NextResponse.json({ ok: true });
