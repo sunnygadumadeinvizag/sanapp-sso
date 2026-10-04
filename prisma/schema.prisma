@@ -96,6 +96,13 @@ model User {
   phCategory        String?        // required (NONE when not applicable)
   nonInstituteEmail String?        // optional personal email
   emergencyPhone    String?        // optional emergency contact
+  // Scholars — admission details from the PhD master list
+  natureOfAdmission String?        // e.g. Regular with Assistantship
+  discipline        String?        // Choice of Specialization
+  admissionYear     String?        // e.g. 2024-2025
+  admissionSemester String?        // AUTUMN | SPRING
+  admissionCategory String?        // GENERAL | OBC | SC | ST | EWS | OBC-NCL
+  scholarData       Json?          // remaining spreadsheet columns (addresses, contacts, …)
   isActive       Boolean          @default(true)
   // True for seed/demo accounts — real users imported from the IIPE master list are false.
   isTest         Boolean          @default(false)

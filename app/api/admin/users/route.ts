@@ -45,6 +45,12 @@ const USER_SELECT = {
   course: { select: { id: true, name: true } },
   guideId: true,
   guide: { select: { id: true, name: true } },
+  natureOfAdmission: true,
+  discipline: true,
+  admissionYear: true,
+  admissionSemester: true,
+  admissionCategory: true,
+  scholarData: true,
   isActive: true,
   isTest: true,
   avatar: true,
@@ -194,9 +200,6 @@ function validateProfile(b: ReturnType<typeof normalize>) {
   }
   if ((b.primaryRole === "STUDENT" || b.primaryRole === "SCHOLAR") && !b.rollNo) {
     return "rollNo (roll number) is required for students and scholars";
-  }
-  if (b.primaryRole === "SCHOLAR" && !b.guideId) {
-    return "guideId is required for scholars";
   }
   if (b.nonInstituteEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.nonInstituteEmail)) {
     return "nonInstituteEmail is not a valid email address";
