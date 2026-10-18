@@ -118,6 +118,24 @@ function normalize(body: Record<string, unknown>) {
     typeof body.rollNo === "string" ? body.rollNo.trim() || null : undefined;
   const empNo =
     typeof body.empNo === "string" ? body.empNo.trim() || null : undefined;
+  const natureOfAdmission =
+    typeof body.natureOfAdmission === "string"
+      ? body.natureOfAdmission.trim() || null
+      : undefined;
+  const discipline =
+    typeof body.discipline === "string" ? body.discipline.trim() || null : undefined;
+  const admissionYear =
+    typeof body.admissionYear === "string"
+      ? body.admissionYear.trim() || null
+      : undefined;
+  const admissionSemester =
+    typeof body.admissionSemester === "string"
+      ? body.admissionSemester.trim() || null
+      : undefined;
+  const admissionCategory =
+    typeof body.admissionCategory === "string"
+      ? body.admissionCategory.trim() || null
+      : undefined;
   const gender =
     body.gender === null || body.gender === ""
       ? null
@@ -159,6 +177,11 @@ function normalize(body: Record<string, unknown>) {
     emergencyPhone,
     rollNo,
     empNo,
+    natureOfAdmission,
+    discipline,
+    admissionYear,
+    admissionSemester,
+    admissionCategory,
     gender,
     phCategory,
     nonInstituteEmail,
@@ -200,6 +223,14 @@ function validateProfile(b: ReturnType<typeof normalize>) {
   }
   if ((b.primaryRole === "STUDENT" || b.primaryRole === "SCHOLAR") && !b.rollNo) {
     return "rollNo (roll number) is required for students and scholars";
+  }
+  if (b.primaryRole === "SCHOLAR") {
+    if (!b.natureOfAdmission) {
+      return "natureOfAdmission is required for scholars";
+    }
+    if (!b.discipline) {
+      return "discipline (choice of specialization) is required for scholars";
+    }
   }
   if (b.nonInstituteEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.nonInstituteEmail)) {
     return "nonInstituteEmail is not a valid email address";
@@ -287,6 +318,11 @@ export async function POST(request: NextRequest) {
       emergencyPhone: body.emergencyPhone,
       rollNo: body.rollNo,
       empNo: body.empNo,
+      natureOfAdmission: body.natureOfAdmission,
+      discipline: body.discipline,
+      admissionYear: body.admissionYear,
+      admissionSemester: body.admissionSemester,
+      admissionCategory: body.admissionCategory,
       gender: body.gender,
       phCategory: body.phCategory,
       nonInstituteEmail: body.nonInstituteEmail,
@@ -325,7 +361,9 @@ export async function PATCH(request: NextRequest) {
     body.gender !== undefined ||
     body.phCategory !== undefined ||
     body.rollNo !== undefined ||
-    body.empNo !== undefined
+    body.empNo !== undefined ||
+    body.natureOfAdmission !== undefined ||
+    body.discipline !== undefined
   ) {
     const effective: ReturnType<typeof normalize> = {
       ...body,
@@ -346,6 +384,12 @@ export async function PATCH(request: NextRequest) {
         body.phCategory !== undefined ? body.phCategory : existing.phCategory,
       rollNo: body.rollNo !== undefined ? body.rollNo : existing.rollNo,
       empNo: body.empNo !== undefined ? body.empNo : existing.empNo,
+      natureOfAdmission:
+        body.natureOfAdmission !== undefined
+          ? body.natureOfAdmission
+          : existing.natureOfAdmission,
+      discipline:
+        body.discipline !== undefined ? body.discipline : existing.discipline,
       nonInstituteEmail:
         body.nonInstituteEmail !== undefined
           ? body.nonInstituteEmail
@@ -396,6 +440,19 @@ export async function PATCH(request: NextRequest) {
         : {}),
       ...(body.rollNo !== undefined ? { rollNo: body.rollNo } : {}),
       ...(body.empNo !== undefined ? { empNo: body.empNo } : {}),
+      ...(body.natureOfAdmission !== undefined
+        ? { natureOfAdmission: body.natureOfAdmission }
+        : {}),
+      ...(body.discipline !== undefined ? { discipline: body.discipline } : {}),
+      ...(body.admissionYear !== undefined
+        ? { admissionYear: body.admissionYear }
+        : {}),
+      ...(body.admissionSemester !== undefined
+        ? { admissionSemester: body.admissionSemester }
+        : {}),
+      ...(body.admissionCategory !== undefined
+        ? { admissionCategory: body.admissionCategory }
+        : {}),
       ...(body.gender !== undefined ? { gender: body.gender } : {}),
       ...(body.phCategory !== undefined ? { phCategory: body.phCategory } : {}),
       ...(body.nonInstituteEmail !== undefined
