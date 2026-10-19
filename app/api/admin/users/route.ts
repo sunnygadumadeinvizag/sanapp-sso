@@ -264,7 +264,18 @@ async function referencesExist(b: ReturnType<typeof normalize>) {
 export async function GET(request: NextRequest) {
   if (!authorized(request)) return unauthorized();
 
+  // Optional lookup of one identity (?id= or ?username=) so callers such as the
+  // Main access check can resolve a user's primary role without pulling the
+  // whole registry.
+  const id = request.nextUrl.searchParams.get("id")?.trim();
+  const username = request.nextUrl.searchParams.get("username")?.trim();
+
   const users = await prisma.user.findMany({
+    where: id
+      ? { id }
+      : username
+        ? { username: { equals: username, mode: "insensitive" } }
+        : undefined,
     select: USER_SELECT,
     orderBy: { name: "asc" },
   });
