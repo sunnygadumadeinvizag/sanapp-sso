@@ -26,11 +26,20 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // The JS login form (app/components/LoginForm.tsx) posts with client=fetch
+  // and expects JSON so it can show the error inline without losing what the
+  // user typed. The plain form fallback still gets 303 redirects.
+  const wantsJson = String(form.get("client") ?? "") === "fetch";
+  const jsonError = (error: "captcha" | "credentials") =>
+    NextResponse.json({ ok: false, error }, { status: 401 });
+
   const fail = () =>
-    NextResponse.redirect(
-      new URL(BASE_PATH + `/login?error=1&returnTo=${encodeURIComponent(safeReturn)}`, publicOrigin),
-      303
-    );
+    wantsJson
+      ? jsonError("credentials")
+      : NextResponse.redirect(
+          new URL(BASE_PATH + `/login?error=1&returnTo=${encodeURIComponent(safeReturn)}`, publicOrigin),
+          303
+        );
 
   // Security check — enforced before any credentials are looked up.
   const captchaOk = await verifyCaptcha(
@@ -38,6 +47,7 @@ export async function POST(request: NextRequest) {
     String(form.get("captchaAnswer") ?? "")
   );
   if (!captchaOk) {
+    if (wantsJson) return jsonError("captcha");
     return NextResponse.redirect(
       new URL(BASE_PATH + `/login?error=captcha&returnTo=${encodeURIComponent(safeReturn)}`, publicOrigin),
       303
@@ -69,6 +79,18 @@ export async function POST(request: NextRequest) {
     safeReturn.startsWith("http://") || safeReturn.startsWith("https://")
       ? new URL(safeReturn)
       : new URL(BASE_PATH + safeReturn, publicOrigin);
+  if (wantsJson) {
+    // The JS form navigates itself; the session cookie rides on this response.
+    const res = NextResponse.json({ ok: true, redirect: targetUrl.toString() });
+    res.cookies.set("sso_session", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 8,
+      secure: process.env.COOKIE_SECURE === "true",
+    });
+    return res;
+  }
   const res = NextResponse.redirect(targetUrl, 303);
   res.cookies.set("sso_session", token, {
     httpOnly: true,

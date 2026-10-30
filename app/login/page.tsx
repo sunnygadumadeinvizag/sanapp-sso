@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { verifySessionJwt } from "@/lib/crypto";
 import { createCaptchaChallenge } from "@/lib/captcha";
 import AnnouncementsPanel from "../components/AnnouncementsPanel";
-import CaptchaBox from "../components/CaptchaBox";
+import LoginForm from "../components/LoginForm";
 
 export const metadata: Metadata = { title: "IIPE Intranet Login" };
 export const dynamic = "force-dynamic";
@@ -110,63 +110,7 @@ export default async function LoginPage({
                 </div>
               )}
 
-              <form id="login-form" action={apiPath("/api/login")} method="post">
-                <input type="hidden" name="returnTo" value={safeReturn} />
-                <div className="iipe-field">
-                  <label className="iipe-label" htmlFor="username">
-                    Username
-                  </label>
-                  {/* suppressHydrationWarning: browsers/password managers rewrite
-                      the autocomplete attribute before React hydrates. */}
-                  <input
-                    className="iipe-input"
-                    id="username"
-                    name="username"
-                    autoComplete="username"
-                    required
-                    autoFocus
-                    suppressHydrationWarning
-                  />
-                </div>
-                <div className="iipe-field">
-                  <label className="iipe-label" htmlFor="password">
-                    Password
-                  </label>
-                  <input
-                    className="iipe-input"
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    required
-                    suppressHydrationWarning
-                  />
-                </div>
-                <div className="iipe-field">
-                  <label className="iipe-label" htmlFor="captcha">
-                    Security check
-                  </label>
-                  <CaptchaBox initialToken={captcha.token} initialSvg={captcha.svg} />
-                </div>
-                <button className="iipe-btn" type="submit" style={{ width: "100%" }}>
-                  Sign in
-                </button>
-              </form>
-              <script
-                dangerouslySetInnerHTML={{
-                  __html: `
-                    (function() {
-                      var f = document.getElementById('login-form');
-                      if (f) {
-                        f.addEventListener('submit', function() {
-                          var u = f.querySelector('input[name="username"]');
-                          if (u && typeof u.value === 'string') u.value = u.value.trim();
-                        });
-                      }
-                    })();
-                  `,
-                }}
-              />
+              <LoginForm returnTo={safeReturn} initialToken={captcha.token} initialSvg={captcha.svg} />
 
               <p style={{ marginTop: 12, marginBottom: 0, textAlign: "center" }}>
                 <a href={apiPath("/forgot-password")}>Forgot password?</a>
