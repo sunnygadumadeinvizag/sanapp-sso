@@ -33,14 +33,18 @@ export async function POST(request: NextRequest) {
   // and expects JSON so it can show the error inline without losing what the
   // user typed. The plain form fallback still gets 303 redirects.
   const wantsJson = String(form.get("client") ?? "") === "fetch";
-  const jsonError = (error: "captcha" | "credentials") =>
+  const jsonError = (error: "captcha" | "credentials" | "ambiguous_email") =>
     NextResponse.json({ ok: false, error }, { status: 401 });
 
-  const fail = () =>
+  const fail = (error: "credentials" | "ambiguous_email" = "credentials") =>
     wantsJson
-      ? jsonError("credentials")
+      ? jsonError(error)
       : NextResponse.redirect(
-          new URL(BASE_PATH + `/login?error=1&returnTo=${encodeURIComponent(safeReturn)}`, publicOrigin),
+          new URL(
+            BASE_PATH +
+              `/login?error=${error === "ambiguous_email" ? "ambiguous_email" : "1"}&returnTo=${encodeURIComponent(safeReturn)}`,
+            publicOrigin
+          ),
           303
         );
 
@@ -59,7 +63,7 @@ export async function POST(request: NextRequest) {
 
   if (!username || !password) return fail();
 
-  const user = await prisma.user.findFirst({
+  let user = await prisma.user.findFirst({
     where: {
       username: {
         equals: username,
@@ -67,6 +71,27 @@ export async function POST(request: NextRequest) {
       },
     },
   });
+
+  // Allow signing in with email when it maps uniquely to a single user ID.
+  // Emails are not unique in the schema (shared emails are allowed), so if
+  // more than one user shares the email, require signing in with username.
+  if (!user && username.includes("@")) {
+    const byEmail = await prisma.user.findMany({
+      where: {
+        email: {
+          equals: username,
+          mode: "insensitive",
+        },
+      },
+      take: 2,
+    });
+    if (byEmail.length === 1) {
+      user = byEmail[0];
+    } else if (byEmail.length > 1) {
+      return fail("ambiguous_email");
+    }
+  }
+
   if (!user || !user.isActive) return fail();
 
   const ok =

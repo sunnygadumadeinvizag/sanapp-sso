@@ -98,7 +98,12 @@ export default async function LoginPage({
                   Security check failed. Please try again.
                 </div>
               )}
-              {params.error && params.error !== "captcha" && (
+              {params.error === "ambiguous_email" && (
+                <div className="iipe-alert danger">
+                  Multiple accounts share this email address. Please sign in with your username.
+                </div>
+              )}
+              {params.error && params.error !== "captcha" && params.error !== "ambiguous_email" && (
                 <div className="iipe-alert danger">Invalid username or password.</div>
               )}
               {params.loggedOut && (

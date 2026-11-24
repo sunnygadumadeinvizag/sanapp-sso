@@ -28,7 +28,7 @@ export default function LoginForm({
   initialToken: string;
   initialSvg: string;
 }) {
-  const [error, setError] = useState<"captcha" | "credentials" | null>(null);
+  const [error, setError] = useState<"captcha" | "credentials" | "ambiguous_email" | null>(null);
   const [busy, setBusy] = useState(false);
   const [answer, setAnswer] = useState("");
   const [capsOn, setCapsOn] = useState(false);
@@ -57,7 +57,13 @@ export default function LoginForm({
         window.location.href = d.redirect;
         return;
       }
-      setError(d.error === "captcha" ? "captcha" : "credentials");
+      setError(
+        d.error === "captcha"
+          ? "captcha"
+          : d.error === "ambiguous_email"
+            ? "ambiguous_email"
+            : "credentials"
+      );
     } catch {
       setError("credentials");
     } finally {
@@ -78,12 +84,14 @@ export default function LoginForm({
         <div className="iipe-alert danger" role="alert">
           {error === "captcha"
             ? "Security check failed. Please try again."
-            : "Invalid username or password."}
+            : error === "ambiguous_email"
+              ? "Multiple accounts share this email address. Please sign in with your username."
+              : "Invalid username or password."}
         </div>
       )}
       <div className="iipe-field">
         <label className="iipe-label" htmlFor="username">
-          Username
+          Username or Email
         </label>
         {/* suppressHydrationWarning: browsers/password managers rewrite
             the autocomplete attribute before React hydrates. */}
