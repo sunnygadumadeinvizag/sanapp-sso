@@ -33,7 +33,7 @@ function ResetPasswordPageInner() {
     const cleanUsername = username.trim();
     const cleanOtp = otp.trim();
     if (!cleanUsername) {
-      setError("Username is required.");
+      setError("Username or email is required.");
       return;
     }
     if (!cleanOtp) {
@@ -104,7 +104,7 @@ function ResetPasswordPageInner() {
             <form onSubmit={submit}>
               <div className="iipe-field">
                 <label className="iipe-label" htmlFor="rp-username">
-                  Username
+                  Username or Email
                 </label>
                 <input
                   className="iipe-input"

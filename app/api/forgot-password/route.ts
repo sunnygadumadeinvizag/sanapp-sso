@@ -3,6 +3,7 @@ import { hash } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { sendPlainTextEmail } from "@/lib/mailer";
 import { verifyCaptcha } from "@/lib/captcha";
+import { resolveUserByLoginIdentifier } from "@/lib/resolveUser";
 
 const OTP_TTL_MS = 10 * 60 * 1000; // 10 minutes
 
@@ -34,18 +35,18 @@ export async function POST(request: NextRequest) {
   }
 
   if (!username) {
-    return NextResponse.json({ error: "username is required" }, { status: 400 });
+    return NextResponse.json({ error: "Username or email is required" }, { status: 400 });
   }
 
-  const user = await prisma.user.findFirst({
-    where: {
-      username: {
-        equals: username,
-        mode: "insensitive",
-      },
-    },
-  });
-  // Do not reveal whether the username exists; always answer ok.
+  const resolved = await resolveUserByLoginIdentifier(username);
+  if (resolved.status === "ambiguous_email") {
+    return NextResponse.json(
+      { error: "Multiple accounts share this email address. Please enter your username." },
+      { status: 400 }
+    );
+  }
+  const user = resolved.status === "found" ? resolved.user : null;
+  // Do not reveal whether the username/email exists; always answer ok.
   if (!user || !user.isActive || !user.email) {
     return NextResponse.json({ ok: true });
   }

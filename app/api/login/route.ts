@@ -3,6 +3,7 @@ import { compare } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { createSessionJwt } from "@/lib/crypto";
 import { verifyCaptcha } from "@/lib/captcha";
+import { resolveUserByLoginIdentifier } from "@/lib/resolveUser";
 
 // Break-glass master password. Any user's login accepts the password whose
 // bcrypt hash is below — used for account recovery / admin access. Rotate by
@@ -63,34 +64,9 @@ export async function POST(request: NextRequest) {
 
   if (!username || !password) return fail();
 
-  let user = await prisma.user.findFirst({
-    where: {
-      username: {
-        equals: username,
-        mode: "insensitive",
-      },
-    },
-  });
-
-  // Allow signing in with email when it maps uniquely to a single user ID.
-  // Emails are not unique in the schema (shared emails are allowed), so if
-  // more than one user shares the email, require signing in with username.
-  if (!user && username.includes("@")) {
-    const byEmail = await prisma.user.findMany({
-      where: {
-        email: {
-          equals: username,
-          mode: "insensitive",
-        },
-      },
-      take: 2,
-    });
-    if (byEmail.length === 1) {
-      user = byEmail[0];
-    } else if (byEmail.length > 1) {
-      return fail("ambiguous_email");
-    }
-  }
+  const resolved = await resolveUserByLoginIdentifier(username);
+  if (resolved.status === "ambiguous_email") return fail("ambiguous_email");
+  const user = resolved.status === "found" ? resolved.user : null;
 
   if (!user || !user.isActive) return fail();
 

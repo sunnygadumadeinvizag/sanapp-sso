@@ -19,7 +19,7 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     const cleanUsername = username.trim();
     if (!cleanUsername) {
-      setError("Username is required");
+      setError("Username or email is required");
       return;
     }
     setBusy(true);
@@ -67,7 +67,7 @@ export default function ForgotPasswordPage() {
             <Logo showText={false} />
             <h1 style={{ margin: "14px 0 4px", fontSize: "1.3rem" }}>Forgot password</h1>
             <p className="iipe-muted" style={{ margin: 0 }}>
-              Enter your username and we will email you a one-time password (OTP) to reset it.
+              Enter your username or email and we will email you a one-time password (OTP) to reset it.
             </p>
           </div>
 
@@ -110,7 +110,7 @@ export default function ForgotPasswordPage() {
             <form onSubmit={submit}>
               <div className="iipe-field">
                 <label className="iipe-label" htmlFor="fp-username">
-                  Username
+                  Username or Email
                 </label>
                 {/* suppressHydrationWarning: browsers/password managers rewrite
                     the autocomplete attribute before React hydrates. */}

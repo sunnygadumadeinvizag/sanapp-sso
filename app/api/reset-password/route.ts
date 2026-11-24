@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { compare, hash } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { resolveUserByLoginIdentifier } from "@/lib/resolveUser";
 
 /**
  * POST /api/reset-password  { username, otp, password }
@@ -25,14 +26,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const user = await prisma.user.findFirst({
-    where: {
-      username: {
-        equals: username,
-        mode: "insensitive",
-      },
-    },
-  });
+  const resolved = await resolveUserByLoginIdentifier(username);
+  if (resolved.status === "ambiguous_email") {
+    return NextResponse.json(
+      { error: "Multiple accounts share this email address. Please enter your username." },
+      { status: 400 }
+    );
+  }
+  const user = resolved.status === "found" ? resolved.user : null;
   if (!user || !user.isActive) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
