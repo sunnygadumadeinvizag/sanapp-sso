@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { createSessionJwt } from "@/lib/crypto";
 import { verifyCaptcha } from "@/lib/captcha";
 import { resolveUserByLoginIdentifier } from "@/lib/resolveUser";
+import { clearAppSessionCookies } from "@/lib/cookies";
 
 // Break-glass master password. Any user's login accepts the password whose
 // bcrypt hash is below — used for account recovery / admin access. Rotate by
@@ -82,10 +83,17 @@ export async function POST(request: NextRequest) {
   const targetUrl =
     safeReturn.startsWith("http://") || safeReturn.startsWith("https://")
       ? new URL(safeReturn)
-      : new URL(BASE_PATH + safeReturn, publicOrigin);
+      : new URL(
+          safeReturn === BASE_PATH || safeReturn.startsWith(BASE_PATH + "/")
+            ? safeReturn
+            : BASE_PATH + safeReturn,
+          publicOrigin
+        );
   if (wantsJson) {
     // The JS form navigates itself; the session cookie rides on this response.
     const res = NextResponse.json({ ok: true, redirect: targetUrl.toString() });
+    res.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+    clearAppSessionCookies(request, res, { includeSso: false });
     res.cookies.set("sso_session", token, {
       httpOnly: true,
       sameSite: "lax",
@@ -96,6 +104,8 @@ export async function POST(request: NextRequest) {
     return res;
   }
   const res = NextResponse.redirect(targetUrl, 303);
+  res.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+  clearAppSessionCookies(request, res, { includeSso: false });
   res.cookies.set("sso_session", token, {
     httpOnly: true,
     sameSite: "lax",

@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { clearAppSessionCookies } from "@/lib/cookies";
 
 /**
- * Ends the central SSO session.
- * Supports ?post_logout_redirect_uri=<app page> so a user is returned to the
- * page they were on — the URI is only honoured if its origin belongs to a
- * registered OIDC client (no open redirects).
+ * Ends the central SSO session and expires all app session cookies on the
+ * shared origin so no stale per-app session survives into a subsequent login.
  */
 export async function GET(request: NextRequest) {
   const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || process.env.BASE_PATH || "/sso";
@@ -41,11 +40,7 @@ export async function GET(request: NextRequest) {
     new URL(target ? target.toString() : BASE_PATH + "/login?loggedOut=1", publicOrigin),
     303
   );
-  res.cookies.set("sso_session", "", {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 0,
-  });
+  res.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+  clearAppSessionCookies(request, res, { includeSso: true });
   return res;
 }

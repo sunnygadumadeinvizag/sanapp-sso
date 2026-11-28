@@ -40,10 +40,14 @@ export default function LoginForm({
       body.set("captchaToken", captchaToken);
       body.set("captchaAnswer", answer);
       body.set("returnTo", returnTo);
-      const r = await fetch(apiPath("/api/login"), { method: "POST", body });
+      const r = await fetch(apiPath("/api/login"), {
+        method: "POST",
+        credentials: "same-origin",
+        body,
+      });
       const d = (await r.json()) as { ok: boolean; error?: string; redirect?: string };
       if (d.ok && d.redirect) {
-        window.location.href = d.redirect;
+        window.location.replace(d.redirect);
         return;
       }
       setError(

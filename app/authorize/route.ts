@@ -35,7 +35,9 @@ export async function GET(request: NextRequest) {
   if (!user) {
     const loginUrl = new URL(BASE_PATH + "/login", publicOrigin);
     loginUrl.searchParams.set("returnTo", url.pathname + url.search);
-    return NextResponse.redirect(loginUrl);
+    const res = NextResponse.redirect(loginUrl);
+    res.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+    return res;
   }
 
   const code = crypto.randomUUID().replaceAll("-", "");
@@ -53,5 +55,7 @@ export async function GET(request: NextRequest) {
   const callback = new URL(redirectUri);
   callback.searchParams.set("code", code);
   if (state) callback.searchParams.set("state", state);
-  return NextResponse.redirect(callback);
+  const res = NextResponse.redirect(callback);
+  res.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+  return res;
 }
