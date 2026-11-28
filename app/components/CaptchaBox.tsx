@@ -3,24 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { apiPath } from "sanapp-common-ui";
 
-/**
- * Client-side security check (math captcha).
- *
- * The signed token has a TTL on the server (see src/lib/captcha.ts). A user
- * who idles on the login page for longer than that TTL would otherwise submit
- * an expired token and get "Security check failed". This component keeps the
- * token fresh:
- *
- *  - every 60s it checks the token's age and re-fetches a new challenge once
- *    it is older than REFRESH_MS (well inside the TTL), and
- *  - it also refreshes when the tab regains focus / visibility, because
- *    background tabs throttle timers (the "came back after an hour" case).
- *
- * The typed answer is cleared whenever the question changes so a stale answer
- * is never submitted. The refresh button (↻) is kept for manual refresh.
- */
-
-// Keep well inside the server TTL (10 min) so a failed fetch still has slack.
 const REFRESH_MS = 8 * 60 * 1000;
 
 type Challenge = { token: string; svg: string };
@@ -31,15 +13,11 @@ export default function CaptchaBox({
   answer,
   onAnswer,
   onToken,
-} : {
-  /** Server-rendered challenge (SSR pages). Omit on client-only pages — the
-      component fetches a fresh challenge on mount. */
+}: {
   initialToken?: string;
   initialSvg?: string;
-  /** When provided the component is controlled (parent owns the answer). */
   answer?: string;
   onAnswer?: (v: string) => void;
-  /** Called whenever a new challenge token is loaded (for fetch-based forms). */
   onToken?: (t: string) => void;
 }) {
   const [challenge, setChallenge] = useState<Challenge | null>(
@@ -74,22 +52,19 @@ export default function CaptchaBox({
           issuedAt.current = Date.now();
           setChallenge(d);
           onToken?.(d.token);
-          setAnswerValue(""); // question changed — drop any typed answer
+          setAnswerValue("");
         }
       }
     } catch {
-      // Network hiccup: keep the current challenge; the TTL has slack.
+      // keep current challenge
     } finally {
       busyRef.current = false;
       setBusy(false);
     }
   }
 
-  // Refresh when the token approaches expiry, and whenever the tab wakes up
-  // (background tabs throttle timers, so the 60s check may lag behind).
   useEffect(() => {
     function refreshIfStale() {
-      // No challenge yet (client-only pages such as forgot-password): load one.
       if (!challengeRef.current) {
         void refresh();
         return;
@@ -126,7 +101,20 @@ export default function CaptchaBox({
         title="New code"
         disabled={busy}
       >
-        ↻
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <polyline points="23 4 23 10 17 10" />
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+        </svg>
       </button>
       <input type="hidden" name="captchaToken" value={challenge.token} />
       <input

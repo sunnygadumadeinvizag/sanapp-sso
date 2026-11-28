@@ -2,14 +2,21 @@
 
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
-import { apiPath, Footer, getPlatformNav, Header, Logo } from "sanapp-common-ui";
+import { apiPath, Footer, getPlatformNav, Header } from "sanapp-common-ui";
+import InstituteBand from "../components/InstituteBand";
 
 const SSO_BASE_URL = process.env.NEXT_PUBLIC_SSO_BASE_URL ?? "http://localhost:3000";
 const MAIN_BASE_URL = process.env.NEXT_PUBLIC_MAIN_BASE_URL ?? "http://localhost:3001";
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense fallback={<div className="iipe-center-page"><div className="iipe-card">Loading…</div></div>}>
+    <Suspense
+      fallback={
+        <div className="iipe-center-page">
+          <div className="iipe-auth-card iipe-auth-card-center">Loading…</div>
+        </div>
+      }
+    >
       <ResetPasswordPageInner />
     </Suspense>
   );
@@ -69,18 +76,20 @@ function ResetPasswordPageInner() {
     <>
       <Header
         appName="SSO"
+        signedOut
         navItems={getPlatformNav({
           mainBaseUrl: MAIN_BASE_URL,
           ssoBaseUrl: SSO_BASE_URL,
           signedOut: true,
         })}
       />
-      <div className="iipe-center-page">
-        <div className="iipe-card" style={{ width: 400, maxWidth: "100%" }}>
-          <div style={{ marginBottom: 20 }}>
-            <Logo showText={false} />
-            <h1 style={{ margin: "14px 0 4px", fontSize: "1.3rem" }}>Reset password</h1>
-            <p className="iipe-muted" style={{ margin: 0 }}>
+      <InstituteBand />
+      <main className="iipe-center-page">
+        <div className="iipe-auth-card iipe-auth-card-center">
+          <div className="iipe-auth-head">
+            <div className="iipe-auth-monogram">IIPE</div>
+            <h1 className="iipe-auth-title">Reset password</h1>
+            <p className="iipe-auth-subtitle">
               Enter the OTP emailed to you, then choose a new password.
             </p>
           </div>
@@ -92,12 +101,8 @@ function ResetPasswordPageInner() {
               <div className="iipe-alert success">
                 Your password has been reset. You can now sign in with your new password.
               </div>
-              <a
-                className="iipe-btn"
-                href={apiPath(`/login?reset=1`)}
-                style={{ textAlign: "center", display: "block" }}
-              >
-                Sign in
+              <a className="iipe-btn iipe-auth-btn" href={apiPath(`/login?reset=1`)}>
+                Sign In
               </a>
             </div>
           ) : (
@@ -135,8 +140,6 @@ function ResetPasswordPageInner() {
                 <label className="iipe-label" htmlFor="rp-password">
                   New password
                 </label>
-                {/* suppressHydrationWarning: browsers/password managers rewrite
-                    the autocomplete attribute before React hydrates. */}
                 <input
                   className="iipe-input"
                   id="rp-password"
@@ -165,20 +168,17 @@ function ResetPasswordPageInner() {
                   onChange={(e) => setConfirm(e.target.value)}
                 />
               </div>
-              <button className="iipe-btn" type="submit" disabled={busy} style={{ width: "100%" }}>
+              <button className="iipe-btn iipe-auth-btn" type="submit" disabled={busy}>
                 {busy ? "Resetting…" : "Reset password"}
               </button>
-              <p
-                className="iipe-muted"
-                style={{ marginTop: 16, marginBottom: 0, textAlign: "center" }}
-              >
+              <p className="iipe-auth-foot-link">
                 <a href={apiPath("/forgot-password")}>Resend OTP</a> ·{" "}
                 <a href={apiPath("/login")}>← Back to sign in</a>
               </p>
             </form>
           )}
         </div>
-      </div>
+      </main>
       <Footer />
     </>
   );

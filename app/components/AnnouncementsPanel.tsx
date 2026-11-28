@@ -10,16 +10,12 @@ export type AnnouncementItem = {
   createdAt: string;
 };
 
-/** How many cards are shown in the side panel before "View all". */
-const VISIBLE = 4;
-/** Bodies longer than this are clamped on the card, so the card shows "View more". */
-const TRUNCATE_AT = 140;
+const VISIBLE = 3;
+const TRUNCATE_AT = 120;
 
 function formatDate(iso: string) {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
-  // Fixed locale so the server-rendered HTML and the client render the
-  // exact same string (locale-undefined would differ between the two).
   return d.toLocaleDateString("en-IN", {
     day: "numeric",
     month: "short",
@@ -27,28 +23,58 @@ function formatDate(iso: string) {
   });
 }
 
+function TypeIcon({ alert }: { alert: boolean }) {
+  if (alert) {
+    return (
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+        <line x1="12" y1="9" x2="12" y2="13" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+      </svg>
+    );
+  }
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="16" x2="12" y2="12" />
+      <line x1="12" y1="8" x2="12.01" y2="8" />
+    </svg>
+  );
+}
+
 function Card({ a, onMore }: { a: AnnouncementItem; onMore: (a: AnnouncementItem) => void }) {
+  const isAlert = a.type === "ALERT";
   const needsMore = a.body.length > TRUNCATE_AT;
   return (
-    <article className={`iipe-login-ann ${a.type === "ALERT" ? "alert" : ""}`}>
-      <div className="iipe-login-ann-head">
-        <span className={`iipe-badge ${a.type === "ALERT" ? "danger" : ""}`}>
-          {a.type === "ALERT" ? "ALERT" : "UPDATE"}
-        </span>
-        <time className="iipe-muted" dateTime={a.createdAt}>
-          {formatDate(a.createdAt)}
-        </time>
-      </div>
-      <h3 className="iipe-login-ann-title" title={a.title}>
-        {a.title}
-      </h3>
-      <p className="iipe-login-ann-body">{a.body}</p>
-      <div className="iipe-login-ann-foot">
-        {needsMore && (
-          <button type="button" className="iipe-login-ann-more" onClick={() => onMore(a)}>
-            View more…
-          </button>
-        )}
+    <article className={`iipe-login-ann ${isAlert ? "alert" : ""}`}>
+      <div className="iipe-login-ann-row">
+        <div className="iipe-ann-type-icon">
+          <TypeIcon alert={isAlert} />
+        </div>
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <div className="iipe-login-ann-head">
+            <span className="iipe-ann-kind">{isAlert ? "Alert" : "Update"}</span>
+            <span className="iipe-muted">•</span>
+            <time className="iipe-ann-date" dateTime={a.createdAt}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              {formatDate(a.createdAt)}
+            </time>
+          </div>
+          <h2 className="iipe-login-ann-title" title={a.title}>
+            {a.title}
+          </h2>
+          <p className="iipe-login-ann-body">{a.body}</p>
+          {needsMore && (
+            <button type="button" className="iipe-login-ann-more" onClick={() => onMore(a)}>
+              Read full notice →
+            </button>
+          )}
+        </div>
       </div>
     </article>
   );
@@ -63,7 +89,6 @@ export default function AnnouncementsPanel({
   const visible = announcements.slice(0, VISIBLE);
   const total = announcements.length;
 
-  // Esc closes the modal; lock body scroll while it is open.
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(null);
@@ -78,36 +103,58 @@ export default function AnnouncementsPanel({
 
   return (
     <>
-      <aside className="iipe-login-updates">
-        <div className="iipe-login-updates-head">
-          <h2>Updates &amp; Alerts</h2>
-          {total > 0 && <span className="iipe-muted">{total} latest</span>}
+      <aside className="iipe-updates-card" aria-label="Updates and alerts">
+        <div className="iipe-updates-head">
+          <div className="iipe-updates-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="m3 11 18-5v12L3 14v-3z" />
+              <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
+            </svg>
+          </div>
+          <div>
+            <p className="iipe-updates-kicker">Stay informed</p>
+            <h2 className="iipe-updates-title">Updates &amp; Alerts</h2>
+          </div>
         </div>
+        <p className="iipe-updates-desc">
+          Important announcements from the IIPE Intranet Administration appear here.
+        </p>
 
         {total === 0 ? (
-          <p className="iipe-muted" style={{ marginTop: 8 }}>
-            No announcements right now.
-          </p>
-        ) : (
-          <>
-            <div className="iipe-login-ann-list">
-              {visible.map((a) => (
-                <Card key={a.id} a={a} onMore={(x) => setOpen([x])} />
-              ))}
+          <div className="iipe-ann-empty">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.4, marginBottom: 10 }} aria-hidden="true">
+              <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.7 21a2 2 0 01-3.4 0" />
+            </svg>
+            <div style={{ fontWeight: 600, color: "var(--iipe-text-secondary)" }}>
+              No new updates right now
             </div>
-            {total > VISIBLE && (
-              <div className="iipe-login-updates-foot">
-                <button
-                  type="button"
-                  className="iipe-login-viewall"
-                  onClick={() => setOpen(announcements)}
-                >
-                  View all updates ({total})
-                </button>
-              </div>
-            )}
-          </>
+            <div style={{ fontSize: "0.82rem", marginTop: 4 }}>
+              Please check back here for important notices.
+            </div>
+          </div>
+        ) : (
+          <div className="iipe-login-ann-list">
+            {visible.map((a) => (
+              <Card key={a.id} a={a} onMore={(x) => setOpen([x])} />
+            ))}
+          </div>
         )}
+
+        <div className="iipe-login-updates-foot">
+          <span className="iipe-muted" style={{ fontSize: "0.75rem" }}>
+            Indian Institute of Petroleum and Energy · Intranet Portal
+          </span>
+          {total > VISIBLE && (
+            <button
+              type="button"
+              className="iipe-login-viewall"
+              onClick={() => setOpen(announcements)}
+            >
+              View all ({total})
+            </button>
+          )}
+        </div>
       </aside>
 
       {open && (
@@ -120,28 +167,37 @@ export default function AnnouncementsPanel({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="iipe-ann-modal-head">
-              <h2>{open.length === 1 ? "Update" : "All updates & alerts"}</h2>
+              <h2>{open.length === 1 ? "Announcement" : "All Updates & Alerts"}</h2>
               <button
                 type="button"
                 className="iipe-ann-modal-close"
                 onClick={() => setOpen(null)}
                 aria-label="Close"
               >
-                ✕
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
               </button>
             </div>
             <div className="iipe-ann-modal-list">
               {open.map((a) => (
-                <article key={a.id} className={`iipe-login-ann ${a.type === "ALERT" ? "alert" : ""}`}>
+                <article
+                  key={a.id}
+                  className={`iipe-login-ann ${a.type === "ALERT" ? "alert" : ""}`}
+                >
                   <div className="iipe-login-ann-head">
-                    <span className={`iipe-badge ${a.type === "ALERT" ? "danger" : ""}`}>
-                      {a.type === "ALERT" ? "ALERT" : "UPDATE"}
+                    <span className="iipe-ann-kind">
+                      {a.type === "ALERT" ? "Alert" : "Update"}
                     </span>
-                    <time className="iipe-muted" dateTime={a.createdAt}>
+                    <span className="iipe-muted">•</span>
+                    <time className="iipe-ann-date" dateTime={a.createdAt}>
                       {formatDate(a.createdAt)}
                     </time>
                   </div>
-                  <h3 className="iipe-ann-modal-title">{a.title}</h3>
+                  <h3 className="iipe-login-ann-title" style={{ marginBottom: 6 }}>
+                    {a.title}
+                  </h3>
                   <p className="iipe-ann-modal-full">{a.body}</p>
                 </article>
               ))}

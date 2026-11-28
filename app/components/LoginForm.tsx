@@ -6,18 +6,7 @@ import CaptchaBox from "./CaptchaBox";
 
 /**
  * Client-side login form.
- *
- * Submits with fetch so a failed attempt can show the validation message
- * inline while keeping everything the user typed — username, password and
- * the security-check answer are never cleared. (The captcha token is a
- * stateless 10-minute JWT, so it stays valid across attempts.)
- *
- * The native form action is kept for non-JS fallback: without JavaScript the
- * browser POSTs normally and /api/login redirects with ?error= as before.
- * With JavaScript we preventDefault and add client=fetch so /api/login
- * answers with JSON instead of a redirect.
- *
- * Also shows a Caps Lock warning while typing the password.
+ * Preserves typed values on validation error and shows a Caps Lock hint.
  */
 export default function LoginForm({
   returnTo,
@@ -93,12 +82,11 @@ export default function LoginForm({
         <label className="iipe-label" htmlFor="username">
           Username or Email
         </label>
-        {/* suppressHydrationWarning: browsers/password managers rewrite
-            the autocomplete attribute before React hydrates. */}
         <input
           className="iipe-input"
           id="username"
           name="username"
+          placeholder="Enter your username or institute email"
           autoComplete="username"
           required
           autoFocus
@@ -114,6 +102,7 @@ export default function LoginForm({
           id="password"
           name="password"
           type="password"
+          placeholder="Enter your password"
           autoComplete="current-password"
           required
           suppressHydrationWarning
@@ -122,16 +111,13 @@ export default function LoginForm({
           onBlur={() => setCapsOn(false)}
         />
         {capsOn && (
-          <div
-            style={{
-              marginTop: 4,
-              fontSize: "0.8rem",
-              color: "#b45309",
-              fontWeight: 600,
-            }}
-            role="status"
-          >
-            ⚠ Caps Lock is ON
+          <div className="iipe-caps-warn" role="status">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            Caps Lock is ON
           </div>
         )}
       </div>
@@ -146,8 +132,8 @@ export default function LoginForm({
           onAnswer={setAnswer}
         />
       </div>
-      <button className="iipe-btn" type="submit" style={{ width: "100%" }} disabled={busy}>
-        {busy ? "Signing in…" : "Sign in"}
+      <button className="iipe-btn iipe-auth-btn" type="submit" disabled={busy}>
+        {busy ? "Signing In…" : "Sign In"}
       </button>
     </form>
   );

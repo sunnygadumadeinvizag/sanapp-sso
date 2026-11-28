@@ -1,8 +1,6 @@
 html {
   min-height: 100%;
 }
-/* min-height in viewport units (not %) so short pages still fill the screen
-   and the footer stays pinned to the bottom on large devices. */
 body {
   min-height: 100vh;
   min-height: 100dvh;
@@ -11,114 +9,233 @@ body {
 }
 
 /* ------------------------------------------------------------------
- * SSO login page — hero identity band on top, then sign-in on the
- * left and updates & alerts on the right. Both panels are capped at
- * the same width so neither overpowers the other; the grid is centered
- * when the viewport is wider.
+ * Pre-login Institute Branding Band (Academics Management System style)
+ * ------------------------------------------------------------------ */
+.iipe-institute-band {
+  width: 100%;
+  background: var(--iipe-surface);
+  border-bottom: 1px solid var(--iipe-border);
+  padding: 14px 20px;
+}
+.iipe-institute-band-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.iipe-institute-band-logo {
+  width: 84px;
+  height: 84px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.iipe-institute-band-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.iipe-institute-band-native {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--iipe-primary);
+  line-height: 1.3;
+}
+.iipe-institute-band-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.015em;
+  color: var(--iipe-primary);
+  line-height: 1.25;
+  margin-top: 2px;
+}
+.iipe-institute-band-addr {
+  font-size: 0.78rem;
+  color: var(--iipe-primary-dark);
+  margin-top: 2px;
+  line-height: 1.3;
+}
+.iipe-institute-band-tag {
+  font-size: 0.7rem;
+  color: var(--iipe-muted);
+  margin-top: 1px;
+  line-height: 1.3;
+}
+[data-theme="dark"] .iipe-institute-band-native,
+[data-theme="dark"] .iipe-institute-band-title {
+  color: color-mix(in srgb, var(--iipe-primary) 35%, #93c5fd);
+}
+[data-theme="dark"] .iipe-institute-band-addr {
+  color: var(--iipe-text-secondary);
+}
+
+/* ------------------------------------------------------------------
+ * SSO Login Workspace (two equal-height elevated cards on neutral canvas)
  * ------------------------------------------------------------------ */
 .iipe-login-page {
   flex: 1;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 40px 24px;
-  overflow-y: auto;
-  background: linear-gradient(160deg, #f4f8fb 0%, #eaf1f7 60%, #e3edf5 100%);
-}
-
-.iipe-login-stack {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  width: 100%;
-  max-width: 1020px;
-  min-width: 0;
-  margin: 0 auto;
-}
-
-/* Hero: official IIPE logo + institute identity (from the iipe.ac.in site) */
-.iipe-hero {
-  display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  gap: 22px;
-  background: var(--iipe-surface);
-  border: 1px solid var(--iipe-border);
-  border-radius: var(--iipe-radius);
-  box-shadow: var(--iipe-shadow);
-  padding: 18px 24px;
-  margin-bottom: 24px;
-  width: 100%;
-  max-width: 1020px;
-  margin-left: auto;
-  margin-right: auto;
-  box-sizing: border-box;
-  flex: 0 0 auto;
-}
-.iipe-hero-text {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.iipe-hero-logo {
-  height: 104px;
-  width: auto;
-  flex-shrink: 0;
-}
-.iipe-hero-title {
-  font-size: 1.08rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  color: var(--iipe-primary);
-  line-height: 1.3;
-}
-.iipe-hero-native {
-  font-size: 0.78rem;
-  color: var(--iipe-primary);
-  margin-top: 3px;
-  line-height: 1.35;
+  padding: 36px 24px;
+  background: var(--iipe-bg);
 }
 
 .iipe-login-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  justify-content: center;
-  gap: 32px;
-  align-items: start;
+  gap: 28px;
+  align-items: stretch;
   width: 100%;
-  max-width: 1020px;
+  max-width: 1120px;
   margin: 0 auto;
-  box-sizing: border-box;
-  flex: 0 0 auto;
 }
 
-.iipe-login-card {
+.iipe-auth-card {
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin-bottom: 0;
-  height: fit-content;
+  background: var(--iipe-surface);
+  border: 1px solid var(--iipe-border);
+  border-radius: 14px;
+  padding: 32px 36px;
+  box-shadow: var(--iipe-shadow-lg);
 }
 
-/* --- Updates & alerts panel --- */
-.iipe-login-updates {
-  min-width: 0;
+.iipe-auth-card-center {
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.iipe-auth-head {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.iipe-auth-monogram {
+  margin: 0 auto 14px;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--iipe-primary);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  box-shadow: 0 6px 14px -4px color-mix(in srgb, var(--iipe-primary) 45%, transparent);
+}
+
+.iipe-auth-title {
+  margin: 0 0 4px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--iipe-text);
+}
+
+.iipe-auth-subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--iipe-muted);
+  line-height: 1.45;
+}
+
+.iipe-auth-btn {
+  width: 100%;
+  height: 42px;
+  font-size: 0.925rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.iipe-auth-foot-link {
+  margin-top: 16px;
+  margin-bottom: 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--iipe-muted);
+}
+
+.iipe-caps-warn {
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: var(--iipe-warning-light);
+  border: 1px solid var(--iipe-warning-border);
+  color: var(--iipe-warning);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* --- Updates & Alerts card --- */
+.iipe-updates-card {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  background: var(--iipe-surface);
+  border: 1px solid var(--iipe-border);
+  border-radius: 14px;
+  padding: 32px 36px;
+  box-shadow: var(--iipe-shadow-lg);
+  min-width: 0;
 }
 
-.iipe-login-updates-head {
+.iipe-updates-head {
   display: flex;
-  align-items: baseline;
-  gap: 12px;
-  margin-bottom: 14px;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
 }
 
-.iipe-login-updates-head h2 {
+.iipe-updates-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--iipe-primary-100);
+  color: var(--iipe-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .iipe-updates-icon {
+  color: color-mix(in srgb, var(--iipe-primary) 35%, #93c5fd);
+}
+
+.iipe-updates-kicker {
   margin: 0;
-  font-size: 1.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--iipe-primary);
+}
+
+[data-theme="dark"] .iipe-updates-kicker {
+  color: color-mix(in srgb, var(--iipe-primary) 35%, #93c5fd);
+}
+
+.iipe-updates-title {
+  margin: 2px 0 0;
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--iipe-text);
+}
+
+.iipe-updates-desc {
+  margin: 0 0 18px;
+  font-size: 0.875rem;
+  color: var(--iipe-muted);
 }
 
 .iipe-login-ann-list {
@@ -128,115 +245,166 @@ body {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding-right: 4px;
 }
 
-/* Card base look (shared with the modal cards). */
 .iipe-login-ann {
-  background: #ffffff;
-  border: 1px solid var(--iipe-border, #dbe4ee);
-  border-left: 4px solid var(--iipe-primary, #1f6feb);
-  border-radius: var(--iipe-radius, 10px);
-  padding: 12px 16px;
-  box-shadow: 0 1px 4px rgba(16, 42, 84, 0.06);
+  background: var(--iipe-surface);
+  border: 1px solid var(--iipe-primary-100);
+  border-radius: 10px;
+  padding: 15px 16px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.iipe-login-ann:hover {
+  border-color: var(--iipe-primary-200);
+  box-shadow: var(--iipe-shadow);
 }
 
 .iipe-login-ann.alert {
-  border-left-color: var(--iipe-danger, #d1242f);
-  background: #fffafa;
+  border-color: var(--iipe-warning-border);
+  background: var(--iipe-warning-light);
 }
 
-/* Cards in the side panel have ONE uniform height: a fixed header, a
-   single-line title and a 3-line body, so every card is identical no
-   matter how long the text is. Longer bodies are clamped and get a
-   "View more" link that opens the complete update in a modal. */
-.iipe-login-ann-list .iipe-login-ann {
+.iipe-login-ann-row {
   display: flex;
-  flex-direction: column;
-  height: 158px;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.iipe-ann-type-icon {
+  margin-top: 2px;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: var(--iipe-primary-100);
+  color: var(--iipe-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iipe-login-ann.alert .iipe-ann-type-icon {
+  background: color-mix(in srgb, var(--iipe-warning) 16%, transparent);
+  color: var(--iipe-warning);
 }
 
 .iipe-login-ann-head {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 6px;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.iipe-ann-kind {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--iipe-primary);
+}
+
+.iipe-login-ann.alert .iipe-ann-kind {
+  color: var(--iipe-warning);
+}
+
+.iipe-ann-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.74rem;
+  color: var(--iipe-muted);
 }
 
 .iipe-login-ann-title {
   margin: 0 0 4px;
-  font-size: 1rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 0.96rem;
+  font-weight: 600;
+  color: var(--iipe-text);
+  line-height: 1.35;
 }
 
 .iipe-login-ann-body {
-  flex: 1;
   margin: 0;
-  font-size: 0.9rem;
-  color: #475569;
+  font-size: 0.85rem;
+  color: var(--iipe-text-secondary);
   line-height: 1.5;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.iipe-login-ann-foot {
-  height: 22px;
-  display: flex;
-  align-items: flex-end;
-  margin-top: 4px;
-}
-
 .iipe-login-ann-more {
+  margin-top: 6px;
   background: none;
   border: none;
   padding: 0;
-  color: var(--iipe-primary, #1f6feb);
-  font-size: 0.85rem;
+  color: var(--iipe-primary);
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
+}
+
+.iipe-login-ann-more:hover {
   text-decoration: underline;
 }
 
-/* "View all updates" footer button */
+.iipe-ann-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px dashed var(--iipe-border-strong);
+  border-radius: 10px;
+  padding: 36px 20px;
+  color: var(--iipe-muted);
+}
+
 .iipe-login-updates-foot {
   margin-top: 14px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--iipe-border);
 }
 
 .iipe-login-viewall {
-  background: #ffffff;
-  border: 1px solid var(--iipe-border, #dbe4ee);
-  color: var(--iipe-primary, #1f6feb);
+  background: var(--iipe-surface);
+  border: 1px solid var(--iipe-border-strong);
+  color: var(--iipe-primary);
   border-radius: 999px;
-  padding: 7px 18px;
-  font-size: 0.9rem;
+  padding: 6px 14px;
+  font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 .iipe-login-viewall:hover {
-  border-color: var(--iipe-primary, #1f6feb);
+  border-color: var(--iipe-primary);
+  background: var(--iipe-primary-50);
 }
 
-/* --- Captcha (login + forgot-password security check) --- */
+/* --- Captcha --- */
 .iipe-captcha-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .iipe-captcha {
-  border: 1px solid var(--iipe-border, #dbe4ee);
+  border: 1px solid var(--iipe-border-strong);
   border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
   line-height: 0;
-  background: #eef2f7;
+  background: #f1f5f9;
 }
 
 .iipe-captcha svg {
@@ -249,39 +417,28 @@ body {
 }
 
 .iipe-captcha-refresh {
-  background: #ffffff;
-  border: 1px solid var(--iipe-border, #dbe4ee);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: var(--iipe-surface);
+  border: 1px solid var(--iipe-border-strong);
   border-radius: 8px;
-  padding: 7px 10px;
-  font-size: 1rem;
-  line-height: 1;
   cursor: pointer;
-  color: var(--iipe-primary, #1f6feb);
+  color: var(--iipe-primary);
   flex-shrink: 0;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 .iipe-captcha-refresh:hover {
-  border-color: var(--iipe-primary, #1f6feb);
+  border-color: var(--iipe-primary);
+  background: var(--iipe-primary-50);
 }
 
-[data-theme="dark"] .iipe-captcha {
-  border-color: var(--iipe-border);
-}
-
-[data-theme="dark"] .iipe-captcha-refresh {
-  background: var(--iipe-surface);
-  border-color: var(--iipe-border);
-}
-
-@media (max-width: 640px) {
-  .iipe-captcha-row {
-    flex-wrap: wrap;
-  }
-}
-
-/* Modal with the complete update(s) — full text, no clamping. */
+/* --- Modal with complete updates --- */
 .iipe-ann-modal {
-  max-width: 560px;
+  max-width: 580px;
 }
 
 .iipe-ann-modal-head {
@@ -290,25 +447,32 @@ body {
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--iipe-border);
 }
 
 .iipe-ann-modal-head h2 {
   margin: 0;
   font-size: 1.15rem;
+  font-weight: 700;
 }
 
 .iipe-ann-modal-close {
   background: none;
   border: none;
-  font-size: 1rem;
-  line-height: 1;
-  color: #64748b;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--iipe-muted);
   cursor: pointer;
-  padding: 4px;
 }
 
 .iipe-ann-modal-close:hover {
-  color: #0f172a;
+  background: var(--iipe-surface-subtle);
+  color: var(--iipe-text);
 }
 
 .iipe-ann-modal-list {
@@ -317,87 +481,53 @@ body {
   gap: 12px;
 }
 
-.iipe-ann-modal-list .iipe-login-ann {
-  display: block;
-  height: auto;
-  padding: 14px 16px;
-}
-
-.iipe-ann-modal-title {
-  margin: 0 0 6px;
-  font-size: 1.05rem;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: clip;
-}
-
 .iipe-ann-modal-full {
   margin: 0;
-  font-size: 0.92rem;
-  color: #334155;
+  font-size: 0.875rem;
+  color: var(--iipe-text-secondary);
   line-height: 1.6;
   white-space: pre-wrap;
 }
 
-/* ------------------------------------------------------------------
- * Dark theme overrides for the login page (hardcoded light colors).
- * ------------------------------------------------------------------ */
-[data-theme="dark"] .iipe-login-page {
-  background: linear-gradient(160deg, #0d1513 0%, #0a110f 60%, #0c1311 100%);
-}
-
-[data-theme="dark"] .iipe-login-ann,
-[data-theme="dark"] .iipe-login-viewall {
-  background: var(--iipe-surface);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-}
-
-[data-theme="dark"] .iipe-login-ann.alert {
-  background: color-mix(in srgb, var(--iipe-danger) 12%, var(--iipe-surface));
-}
-
-[data-theme="dark"] .iipe-login-ann-body {
-  color: var(--iipe-muted);
-}
-
-[data-theme="dark"] .iipe-ann-modal-full {
-  color: var(--iipe-text);
-}
-
-[data-theme="dark"] .iipe-ann-modal-close {
-  color: var(--iipe-muted);
-}
-
-[data-theme="dark"] .iipe-ann-modal-close:hover {
-  color: var(--iipe-text);
-}
-
-/* --- Responsive: stack on narrow screens --- */
 @media (max-width: 900px) {
   .iipe-login-grid {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 20px;
+  }
+  .iipe-auth-card,
+  .iipe-updates-card {
+    padding: 24px 22px;
   }
 }
 
 @media (max-width: 640px) {
   .iipe-login-page {
-    padding: 20px 12px;
+    padding: 20px 14px;
+    align-items: flex-start;
   }
-  .iipe-hero {
-    flex-direction: column;
-    text-align: center;
-    padding: 18px 14px;
+  .iipe-institute-band {
+    padding: 12px 14px;
+  }
+  .iipe-institute-band-inner {
     gap: 12px;
-    margin-bottom: 18px;
   }
-  .iipe-hero-logo {
-    height: 84px;
+  .iipe-institute-band-logo {
+    width: 54px;
+    height: 54px;
   }
-  .iipe-hero-title {
-    font-size: 0.98rem;
+  .iipe-institute-band-native {
+    font-size: 0.72rem;
   }
-  .iipe-hero-native {
-    font-size: 0.74rem;
+  .iipe-institute-band-title {
+    font-size: 0.92rem;
+  }
+  .iipe-institute-band-addr {
+    font-size: 0.68rem;
+  }
+  .iipe-institute-band-tag {
+    display: none;
+  }
+  .iipe-captcha-row {
+    flex-wrap: wrap;
   }
 }

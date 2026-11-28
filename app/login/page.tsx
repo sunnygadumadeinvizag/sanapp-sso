@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { verifySessionJwt } from "@/lib/crypto";
 import { createCaptchaChallenge } from "@/lib/captcha";
 import AnnouncementsPanel from "../components/AnnouncementsPanel";
+import InstituteBand from "../components/InstituteBand";
 import LoginForm from "../components/LoginForm";
 
 export const metadata: Metadata = { title: "IIPE Intranet Login" };
@@ -39,8 +40,6 @@ export default async function LoginPage({
     }
   }
 
-  // Already signed in? Send the user where they were going instead of
-  // showing the login form again.
   const store = await cookies();
   const session = store.get("sso_session")?.value ?? "";
   const claims = await verifySessionJwt(session);
@@ -48,7 +47,6 @@ export default async function LoginPage({
     redirect(safeReturn);
   }
 
-  // Platform updates & alerts posted by the Super Admin (published only).
   const announcements: Announcement[] = await prisma.announcement.findMany({
     where: { published: true },
     select: { id: true, type: true, title: true, body: true, createdAt: true },
@@ -56,7 +54,6 @@ export default async function LoginPage({
     take: 12,
   });
 
-  // Security check rendered on every visit (signed token + SVG question).
   const captcha = await createCaptchaChallenge();
 
   return (
@@ -70,67 +67,58 @@ export default async function LoginPage({
           signedOut: true,
         })}
       />
-      <div className="iipe-login-page">
-        <div className="iipe-login-stack">
-          {/* Hero: official IIPE logo + institute identity (from iipe.ac.in).
-              Keep the address and tagline in the footer; the three institute
-              names stay together here for a compact bilingual/trilingual mark. */}
-          <div className="iipe-hero">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={apiPath("/img/iipe-logo.png")} alt="IIPE logo" className="iipe-hero-logo" />
-            <div className="iipe-hero-text">
-              <div className="iipe-hero-title">INDIAN INSTITUTE OF PETROLEUM AND ENERGY</div>
-              <div className="iipe-hero-native">भारतीय पेट्रोलियम और ऊर्जा संस्थान</div>
-              <div className="iipe-hero-native">భారతీయ పెట్రోలియం మరియు శక్తి విజ్ఞాన సంస్థ</div>
-            </div>
-          </div>
-
-          <div className="iipe-login-grid">
-            {/* Left: sign-in form */}
-            <div className="iipe-card iipe-login-card">
-              <h1 style={{ margin: "0 0 4px", fontSize: "1.3rem" }}>IIPE Intranet Login</h1>
-              <p className="iipe-muted" style={{ margin: "0 0 18px" }}>
-                Sign in once to access all IIPE applications
-              </p>
-
-              {params.error === "captcha" && (
-                <div className="iipe-alert danger">
-                  Security check failed. Please try again.
-                </div>
-              )}
-              {params.error === "ambiguous_email" && (
-                <div className="iipe-alert danger">
-                  Multiple accounts share this email address. Please sign in with your username.
-                </div>
-              )}
-              {params.error && params.error !== "captcha" && params.error !== "ambiguous_email" && (
-                <div className="iipe-alert danger">Invalid username or password.</div>
-              )}
-              {params.loggedOut && (
-                <div className="iipe-alert success">You have been signed out.</div>
-              )}
-              {params.reset && (
-                <div className="iipe-alert success">
-                  Your password was reset. Sign in with your new password.
-                </div>
-              )}
-
-              <LoginForm returnTo={safeReturn} initialToken={captcha.token} initialSvg={captcha.svg} />
-
-              <p style={{ marginTop: 12, marginBottom: 0, textAlign: "center" }}>
-                <a href={apiPath("/forgot-password")}>Forgot password?</a>
+      <InstituteBand />
+      <main className="iipe-login-page">
+        <div className="iipe-login-grid">
+          <section className="iipe-auth-card" aria-labelledby="login-heading">
+            <div className="iipe-auth-head">
+              <div className="iipe-auth-monogram">IIPE</div>
+              <h1 id="login-heading" className="iipe-auth-title">
+                Welcome back
+              </h1>
+              <p className="iipe-auth-subtitle">IIPE Intranet · Single Sign-On</p>
+              <p className="iipe-auth-subtitle" style={{ marginTop: 4 }}>
+                Sign in with your username or institute email to continue.
               </p>
             </div>
-            {/* Right: updates & alerts posted by the sysadmin */}
-            <AnnouncementsPanel
-              announcements={announcements.map((a) => ({
-                ...a,
-                createdAt: a.createdAt.toISOString(),
-              }))}
-            />
-          </div>
+
+            {params.error === "captcha" && (
+              <div className="iipe-alert danger">
+                Security check failed. Please try again.
+              </div>
+            )}
+            {params.error === "ambiguous_email" && (
+              <div className="iipe-alert danger">
+                Multiple accounts share this email address. Please sign in with your username.
+              </div>
+            )}
+            {params.error && params.error !== "captcha" && params.error !== "ambiguous_email" && (
+              <div className="iipe-alert danger">Invalid username or password.</div>
+            )}
+            {params.loggedOut && (
+              <div className="iipe-alert success">You have been signed out.</div>
+            )}
+            {params.reset && (
+              <div className="iipe-alert success">
+                Your password was reset. Sign in with your new password.
+              </div>
+            )}
+
+            <LoginForm returnTo={safeReturn} initialToken={captcha.token} initialSvg={captcha.svg} />
+
+            <p className="iipe-auth-foot-link">
+              <a href={apiPath("/forgot-password")}>Forgot your password?</a>
+            </p>
+          </section>
+
+          <AnnouncementsPanel
+            announcements={announcements.map((a) => ({
+              ...a,
+              createdAt: a.createdAt.toISOString(),
+            }))}
+          />
         </div>
-      </div>
+      </main>
       <Footer
         links={[
           { label: "Home", href: "/" },

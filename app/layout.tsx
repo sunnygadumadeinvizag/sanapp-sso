@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import "sanapp-common-ui/styles.css";
 import "./globals.css";
 import { ThemeScript } from "sanapp-common-ui";
+
+const inter = localFont({
+  src: "./fonts/Inter.ttf",
+  display: "swap",
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
   title: "IIPE Intranet Login",
@@ -11,9 +18,12 @@ export const metadata: Metadata = {
 const SSO_BASE_URL = process.env.SSO_BASE_URL ?? "http://localhost:3000";
 
 async function getTheme() {
-  const fallback = { mode: "system", primary: "#0b5d4f", accent: "#d9a441" } as const;
+  const fallback = { mode: "system", primary: "#004499", accent: "#d9a441" } as const;
   try {
-    const res = await fetch(`${SSO_BASE_URL}/api/theme`, { cache: "no-store", signal: AbortSignal.timeout(2000) });
+    const res = await fetch(`${SSO_BASE_URL}/api/theme`, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(2000),
+    });
     if (!res.ok) return fallback;
     const data = await res.json();
     return {
@@ -29,7 +39,7 @@ async function getTheme() {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const theme = await getTheme();
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
       <body>
         <ThemeScript
           defaultMode={theme.mode}

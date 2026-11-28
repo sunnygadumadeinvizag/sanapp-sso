@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 const DEFAULTS = {
   mode: "system", // light | dark | system
-  primary: "#0b5d4f",
+  primary: "#004499",
   accent: "#d9a441",
 } as const;
 
@@ -16,7 +16,9 @@ const DEFAULTS = {
  */
 export async function GET() {
   const rows = await prisma.platformSetting.findMany({
-    where: { key: { in: ["theme_mode", "primary_color", "accent_color", "account_display_disabled"] } },
+    where: {
+      key: { in: ["theme_mode", "primary_color", "accent_color", "account_display_disabled"] },
+    },
   });
   const map = new Map(rows.map((r) => [r.key, r.value]));
 
@@ -24,6 +26,8 @@ export async function GET() {
     mode: (map.get("theme_mode") as string | undefined) ?? DEFAULTS.mode,
     primary: map.get("primary_color") ?? DEFAULTS.primary,
     accent: map.get("accent_color") ?? DEFAULTS.accent,
-    accountDisplayDisabled: map.get("account_display_disabled") === "true" || map.get("account_display_disabled") === "1",
+    accountDisplayDisabled:
+      map.get("account_display_disabled") === "true" ||
+      map.get("account_display_disabled") === "1",
   });
 }

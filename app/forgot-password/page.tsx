@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { apiPath, Footer, getPlatformNav, Header, Logo } from "sanapp-common-ui";
+import { apiPath, Footer, getPlatformNav, Header } from "sanapp-common-ui";
 import CaptchaBox from "../components/CaptchaBox";
+import InstituteBand from "../components/InstituteBand";
 
 const SSO_BASE_URL = process.env.NEXT_PUBLIC_SSO_BASE_URL ?? "http://localhost:3000";
 const MAIN_BASE_URL = process.env.NEXT_PUBLIC_MAIN_BASE_URL ?? "http://localhost:3001";
@@ -55,19 +56,21 @@ export default function ForgotPasswordPage() {
     <>
       <Header
         appName="SSO"
+        signedOut
         navItems={getPlatformNav({
           mainBaseUrl: MAIN_BASE_URL,
           ssoBaseUrl: SSO_BASE_URL,
           signedOut: true,
         })}
       />
-      <div className="iipe-center-page">
-        <div className="iipe-card" style={{ width: 400, maxWidth: "100%" }}>
-          <div style={{ marginBottom: 20 }}>
-            <Logo showText={false} />
-            <h1 style={{ margin: "14px 0 4px", fontSize: "1.3rem" }}>Forgot password</h1>
-            <p className="iipe-muted" style={{ margin: 0 }}>
-              Enter your username or email and we will email you a one-time password (OTP) to reset it.
+      <InstituteBand />
+      <main className="iipe-center-page">
+        <div className="iipe-auth-card iipe-auth-card-center">
+          <div className="iipe-auth-head">
+            <div className="iipe-auth-monogram">IIPE</div>
+            <h1 className="iipe-auth-title">Forgot password</h1>
+            <p className="iipe-auth-subtitle">
+              Enter your username or institute email and we will send you a 6-digit OTP to reset it.
             </p>
           </div>
 
@@ -81,16 +84,15 @@ export default function ForgotPasswordPage() {
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 16 }}>
                 <a
-                  className="iipe-btn"
+                  className="iipe-btn iipe-auth-btn"
                   href={apiPath(`/reset-password?username=${encodeURIComponent(username)}`)}
-                  style={{ textAlign: "center", display: "block" }}
                 >
                   I have my OTP — Continue to Reset Password
                 </a>
                 <button
                   type="button"
                   className="iipe-btn secondary"
-                  style={{ textAlign: "center", display: "block", width: "100%" }}
+                  style={{ width: "100%", height: 40 }}
                   onClick={() => {
                     setDone(false);
                     setError(null);
@@ -99,10 +101,7 @@ export default function ForgotPasswordPage() {
                   Didn&apos;t receive OTP? Resend OTP
                 </button>
               </div>
-              <p
-                className="iipe-muted"
-                style={{ marginTop: 16, marginBottom: 0, textAlign: "center" }}
-              >
+              <p className="iipe-auth-foot-link">
                 <a href={apiPath("/login")}>← Back to sign in</a>
               </p>
             </div>
@@ -112,12 +111,11 @@ export default function ForgotPasswordPage() {
                 <label className="iipe-label" htmlFor="fp-username">
                   Username or Email
                 </label>
-                {/* suppressHydrationWarning: browsers/password managers rewrite
-                    the autocomplete attribute before React hydrates. */}
                 <input
                   className="iipe-input"
                   id="fp-username"
                   name="username"
+                  placeholder="Enter your username or institute email"
                   autoComplete="username"
                   required
                   autoFocus
@@ -136,19 +134,16 @@ export default function ForgotPasswordPage() {
                   onToken={setCaptchaToken}
                 />
               </div>
-              <button className="iipe-btn" type="submit" disabled={busy} style={{ width: "100%" }}>
+              <button className="iipe-btn iipe-auth-btn" type="submit" disabled={busy}>
                 {busy ? "Sending OTP…" : "Send OTP"}
               </button>
-              <p
-                className="iipe-muted"
-                style={{ marginTop: 16, marginBottom: 0, textAlign: "center" }}
-              >
+              <p className="iipe-auth-foot-link">
                 <a href={apiPath("/login")}>← Back to sign in</a>
               </p>
             </form>
           )}
         </div>
-      </div>
+      </main>
       <Footer />
     </>
   );
